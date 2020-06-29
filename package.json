@@ -4,7 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/server.js --exec \"npm run linter && babel-node\"",
+    "linter": "eslint src",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "create": "node_modules/.bin/sequelize db:create",
+    "drop": "node_modules/.bin/sequelize db:drop",
+    "generate:migration": "node_modules/.bin/sequelize migration:generate  --name"
   },
   "repository": {
     "type": "git",
@@ -15,5 +20,27 @@
   "bugs": {
     "url": "https://github.com/baron1xxx/restaurants-management-systems-server/issues"
   },
-  "homepage": "https://github.com/baron1xxx/restaurants-management-systems-server#readme"
+  "homepage": "https://github.com/baron1xxx/restaurants-management-systems-server#readme",
+  "dependencies": {
+    "@babel/polyfill": "7.8.7",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.4",
+    "sequelize": "^6.2.3",
+    "sequelize-cli": "^6.1.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/register": "7.9.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.1.0",
+    "eslint-plugin-import": "2.20.2",
+    "@types/sequelize": "^4.28.9"
+  }
 }

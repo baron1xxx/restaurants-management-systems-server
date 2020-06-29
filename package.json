@@ -1,0 +1,19 @@
+{
+  "name": "restaurants-management-systems-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baron1xxx/restaurants-management-systems-server.git"
+  },
+  "author": "Mykytka Roman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baron1xxx/restaurants-management-systems-server/issues"
+  },
+  "homepage": "https://github.com/baron1xxx/restaurants-management-systems-server#readme"
+}

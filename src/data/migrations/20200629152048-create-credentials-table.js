@@ -3,16 +3,15 @@ export default {
     .transaction(transaction => queryInterface.createTable('credentials', {
       id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      permissionCode: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false
       },

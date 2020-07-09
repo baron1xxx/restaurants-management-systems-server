@@ -3,10 +3,9 @@ export default {
     .transaction(transaction => queryInterface.createTable('authTokens', {
       id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       accessToken: {
         type: Sequelize.STRING,

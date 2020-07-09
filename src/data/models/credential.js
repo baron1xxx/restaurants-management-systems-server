@@ -1,10 +1,10 @@
 export default (orm, DataTypes) => {
-  const Credential = orm.define('authToken', {
+  const Credential = orm.define('credential', {
     email: {
       allowNull: false,
       type: DataTypes.STRING
     },
-    permissionCode: {
+    password: {
       allowNull: false,
       type: DataTypes.STRING
     },

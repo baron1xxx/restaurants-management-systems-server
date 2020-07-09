@@ -3,12 +3,16 @@ export default models => {
     User,
     Image,
     AuthToken,
-    Credential
+    Credential,
+    Role
   } = models;
 
   User.hasOne(AuthToken);
   User.hasOne(Credential);
+  User.belongsTo(Role);
   User.belongsTo(Image);
+
+  Role.hasOne(User);
 
   Image.hasOne(User);
 };

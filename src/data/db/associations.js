@@ -12,6 +12,8 @@ export default models => {
   User.belongsTo(Role);
   User.belongsTo(Image);
 
+  Credential.belongsTo(User);
+
   Role.hasOne(User);
 
   Image.hasOne(User);

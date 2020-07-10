@@ -1,9 +1,14 @@
 import BaseRepository from './baseRepository';
-import { CredentialModel } from '../models';
+import { CredentialModel, UserModel } from '../models';
 
 class CredentialRepository extends BaseRepository {
   getByEmail(email) {
-    return this.getOne({ email });
+    return this.model.findOne({
+      where: { email },
+      include: {
+        model: UserModel
+      }
+    });
   }
 }
 

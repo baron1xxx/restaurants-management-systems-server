@@ -7,6 +7,7 @@ const router = Router();
 
 router
   .post('/register', userValidateMiddleware, authController.register)
-  .post('/login', loginValidateMiddleware, authController.login);
+  .post('/login', loginValidateMiddleware, authController.login)
+  .post('/google', googleLoginValidateMiddleware, authController.google);
 
 export default router;

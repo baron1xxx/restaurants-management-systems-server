@@ -9,6 +9,7 @@ const router = Router();
 
 router
   .get('/activate/:token', checkActivateTokenMiddleware, authController.activate)
+  .post('/activate', checkActivateTokenMiddleware, authController.activate)
   .post('/register', userValidateMiddleware, authController.register)
   .post('/login', loginValidateMiddleware, authController.login)
   .post('/google', googleLoginValidateMiddleware, authController.google);

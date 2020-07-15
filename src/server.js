@@ -1,5 +1,6 @@
 import express from 'express';
 import http from 'http';
+import cors from 'cors';
 import './config/passportConfig';
 import passport from 'passport';
 import socketIO from 'socket.io';
@@ -27,6 +28,7 @@ sequelize
 // eslint-disable-next-line no-unused-vars
 io.on('connection', socket => {
 });
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

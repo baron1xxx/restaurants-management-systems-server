@@ -62,3 +62,18 @@ export const activate = async (req, res, next) => {
     next({ status: e.status, message: e.message, controller: e.controller });
   }
 };
+
+export const refreshActivate = async (req, res, next) => {
+  try {
+    const { body: { email } } = req;
+    const message = await userService.refreshActivate(email);
+    res.status(200)
+      .json({
+        error: false,
+        data: null,
+        message
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};

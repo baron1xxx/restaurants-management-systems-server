@@ -7,11 +7,15 @@ const env = {
     port: process.env.APP_PORT,
     socketPort: process.env.SOCKET_PORT,
     secret: {
-      owner: {
-        accessToken: process.env.OWNER_ACCESS_SECRET_KEY,
-        refreshToken: process.env.OWNER_REFRESH_SECRET_KEY,
-        activateToken: process.env.OWNER_ACTIVATE_SECRET_KEY,
-        changePasswordToken: process.env.OWNER_CHANGE_PASSWORD_SECRET_KEY
+      accessToken: process.env.ACCESS_SECRET_KEY,
+      refreshToken: process.env.REFRESH_SECRET_KEY,
+      activateToken: process.env.ACTIVATE_SECRET_KEY,
+      changePasswordToken: process.env.CHANGE_PASSWORD_SECRET_KEY
+    },
+    auth: {
+      google: {
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET
       }
     }
   },

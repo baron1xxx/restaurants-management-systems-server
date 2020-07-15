@@ -25,7 +25,23 @@ export const login = async (req, res, next) => {
           accessToken,
           refreshToken
         },
-        message: ''
+        message: null
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+
+export const google = async (req, res, next) => {
+  try {
+    const { accessToken } = await userService.google(req.body);
+    res.status(200)
+      .json({
+        error: false,
+        data: {
+          accessToken
+        },
+        message: authSuccessMessage.SOCIAL_REGISTRATION_SUCCESSFULLY
       });
   } catch (e) {
     next({ status: e.status, message: e.message, controller: e.controller });

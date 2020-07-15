@@ -1,23 +1,25 @@
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import userRepository from '../data/repositories/userRepository';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import env from '../env';
+import credentialRepository from '../data/repositories/credentialRepository';
 
-passport.use(
-  'register',
-  new LocalStrategy(
-    { usernameField: 'firstName',
-      passwordField: 'password',
-      passReqToCallback: true },
-    async ({ body: { email } }, done) => {
-      try {
-        // eslint-disable-next-line no-console
-        console.log(email);
-        return await userRepository.getByEmail(email)
-          ? done({ status: 401, message: 'Email is already taken.' }, null)
-          : done(null, { email });
-      } catch (err) {
-        return done(err);
-      }
+passport.use('google',
+  new GoogleStrategy(
+    {
+      clientID: env.app.auth.google.clientId,
+      clientSecret: env.app.auth.google.clientSecret,
+      callbackURL: '/api/auth/google/callback'
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const {
+        name: { givenName: firstName, familyName: lastName },
+        photos: [{ value: imageUrl }],
+        emails: [{ value: email }],
+        id: password } = profile;
+
+      const credential = await credentialRepository.getByEmail(email);
+      if (credential) return done(null, credential.user);
+
+      return done(null, { firstName, lastName, email, password, imageUrl });
     }
-  )
-);
+  ));

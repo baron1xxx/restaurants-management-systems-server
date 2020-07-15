@@ -158,3 +158,22 @@ export const google = async ({ email, password, authMethod, imageUrl: link, ...u
     throw new ErrorHandler(e.status, e.message, e.controller);
   }
 };
+
+export const activate = async ({ id }) => {
+  try {
+    const userIsActivated = await userRepository.updateById(id, { isActivated: true });
+
+    if (!userIsActivated) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.USER_NOT_ACTIVATED,
+        ACTIVATE_SERVICE
+      );
+    }
+
+    return authSuccessMessage.USER_ACTIVATED;
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller);
+  }
+};
+

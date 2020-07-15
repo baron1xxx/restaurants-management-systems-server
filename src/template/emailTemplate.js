@@ -10,5 +10,7 @@ export const activateAccountTemplate = token => (
                       display: inline-block;
                       font-size: 16px;
                       border-radius: 4px;">
-      <a style="color: white" href=${baseServerURL}/activate/:${token}>Follow this link to activate your account</a>
+      <a 
+      style="color: white" 
+      href=${baseServerURL}/api/auth/activate/${token}>Follow this link to activate your account</a>
    </p>`);

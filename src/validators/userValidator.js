@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { LOCAL, GOOGLE, FACEBOOK } from '../constants/authMethods';
+import { LOCAL } from '../constants/authMethods';
 import { regExpExpressions } from '../constants/regExpExpressions';
 import { roles } from '../constants/roles';
 
@@ -63,7 +63,7 @@ export const userCreateValidator = Joi.object({
     .string()
     .trim()
     .required()
-    .valid(LOCAL, GOOGLE, FACEBOOK)
+    .valid(LOCAL)
     .messages({
       'string.required': 'Auth method is required'
     }),

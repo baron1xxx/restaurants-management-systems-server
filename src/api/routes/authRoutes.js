@@ -3,13 +3,14 @@ import userValidateMiddleware from '../middlewares/userMiddlewares/userValidateM
 import loginValidateMiddleware from '../middlewares/authMiddlewares/loginValidateMiddleware';
 import googleLoginValidateMiddleware from '../middlewares/authMiddlewares/googleLoginValidateMiddleware';
 import checkActivateTokenMiddleware from '../middlewares/authMiddlewares/checkActivateTokenMiddleware';
+import emailValidateMiddleware from '../middlewares/authMiddlewares/emailValidateMiddleware';
 import * as authController from '../controllers/authController';
 
 const router = Router();
 
 router
   .get('/activate/:token', checkActivateTokenMiddleware, authController.activate)
-  .post('/activate', checkActivateTokenMiddleware, authController.activate)
+  .post('/activate', emailValidateMiddleware, authController.refreshActivate)
   .post('/register', userValidateMiddleware, authController.register)
   .post('/login', loginValidateMiddleware, authController.login)
   .post('/google', googleLoginValidateMiddleware, authController.google);

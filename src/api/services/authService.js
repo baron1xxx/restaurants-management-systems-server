@@ -13,7 +13,8 @@ import {
   REGISTER_SERVICE,
   LOGIN_SERVICE,
   GOOGLE_SERVICE,
-  ACTIVATE_SERVICE
+  ACTIVATE_SERVICE,
+  REFRESH_ACTIVATE_SERVICE
 } from '../../constants/servicesName/authServicesName';
 import { ACTIVATE_ACCOUNT } from '../../constants/emailSubject';
 import { secret } from '../../config/jwtConfig';
@@ -177,3 +178,26 @@ export const activate = async ({ id }) => {
   }
 };
 
+export const refreshActivate = async email => {
+  try {
+    const user = await credentialRepository.getByEmail(email);
+
+    if (!user) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.USER_NOT_FOUND,
+        REFRESH_ACTIVATE_SERVICE
+      );
+    }
+
+    emailTransporter(
+      email,
+      ACTIVATE_ACCOUNT,
+      activateAccountTemplate(createToken({ userId: user.id }, secret.activateToken, '5m'))
+    );
+
+    return authSuccessMessage.ACTIVATE_EMAIL_SEND_SUCCESSFULLY;
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller);
+  }
+};

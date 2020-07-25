@@ -77,3 +77,19 @@ export const refreshActivate = async (req, res, next) => {
     next({ status: e.status, message: e.message, controller: e.controller });
   }
 };
+
+export const getUserById = async (req, res, next) => {
+  try {
+    const { user: { id } } = req;
+    const user = await userService.getUserById(id);
+    res.status(200)
+      .json({
+        error: false,
+        data: user,
+        message: null
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+

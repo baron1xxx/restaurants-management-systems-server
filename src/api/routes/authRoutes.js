@@ -4,12 +4,14 @@ import loginValidateMiddleware from '../middlewares/authMiddlewares/loginValidat
 import googleLoginValidateMiddleware from '../middlewares/authMiddlewares/googleLoginValidateMiddleware';
 import checkActivateTokenMiddleware from '../middlewares/authMiddlewares/checkActivateTokenMiddleware';
 import emailValidateMiddleware from '../middlewares/authMiddlewares/emailValidateMiddleware';
+import jwtAccessTokenMiddlewar from '../middlewares/authMiddlewares/jwtAccessTokenMiddlewar';
 import * as authController from '../controllers/authController';
 
 const router = Router();
 
 router
   .get('/activate/:token', checkActivateTokenMiddleware, authController.activate)
+  .get('/user', jwtAccessTokenMiddlewar, authController.getUserById)
   .post('/activate', emailValidateMiddleware, authController.refreshActivate)
   .post('/register', userValidateMiddleware, authController.register)
   .post('/login', loginValidateMiddleware, authController.login)

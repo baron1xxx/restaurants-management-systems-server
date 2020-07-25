@@ -14,7 +14,8 @@ import {
   LOGIN_SERVICE,
   GOOGLE_SERVICE,
   ACTIVATE_SERVICE,
-  REFRESH_ACTIVATE_SERVICE
+  REFRESH_ACTIVATE_SERVICE,
+  AUTH_USER_SERVICE
 } from '../../constants/servicesName/authServicesName';
 import { ACTIVATE_ACCOUNT } from '../../constants/emailSubject';
 import { secret } from '../../config/jwtConfig';
@@ -197,6 +198,31 @@ export const refreshActivate = async email => {
     );
 
     return authSuccessMessage.ACTIVATE_EMAIL_SEND_SUCCESSFULLY;
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller);
+  }
+};
+
+export const getUserById = async userId => {
+  try {
+    const user = await userRepository.getById(userId);
+
+    if (!user) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.USER_NOT_FOUND,
+        AUTH_USER_SERVICE
+      );
+    }
+
+    const {
+      id, firstName, lastName, roleId, imageId,
+      credential: { email },
+      role: { role },
+      image
+    } = user;
+
+    return { id, firstName, lastName, email, roleId, role, imageId, image };
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, e.controller);
   }

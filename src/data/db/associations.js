@@ -7,12 +7,14 @@ export default models => {
     Role
   } = models;
 
-  User.hasOne(AuthToken);
+  User.hasMany(AuthToken);
   User.hasOne(Credential);
   User.belongsTo(Role);
   User.belongsTo(Image);
 
   Credential.belongsTo(User);
+
+  AuthToken.belongsTo(User);
 
   Role.hasOne(User);
 

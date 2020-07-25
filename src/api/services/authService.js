@@ -227,3 +227,11 @@ export const getUserById = async userId => {
     throw new ErrorHandler(e.status, e.message, e.controller);
   }
 };
+
+export const logout = async accessToken => {
+  try {
+    return (await authTokenRepository.deleteByAccessToken(accessToken));
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller);
+  }
+};

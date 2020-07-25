@@ -12,6 +12,14 @@ class AuthTokenRepository extends BaseRepository {
       }
     });
   }
+
+  deleteByAccessToken(accessToken) {
+    return this.model.destroy({
+      where: {
+        accessToken
+      }
+    });
+  }
 }
 
 export default new AuthTokenRepository(AuthTokenModel);

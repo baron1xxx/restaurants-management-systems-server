@@ -8,3 +8,8 @@ export const parseToken = (token, secret) => jwt.verify(token, secret, (err, dec
   if (err) throw new ErrorHandler(UNAUTHORIZED, 'Token is invalid.', 'Parse token');
   return decode;
 });
+
+export const extractAuthJwtToken = req => {
+  const [accessToken] = req.get('Authorization').split(' ').reverse();
+  return accessToken;
+};

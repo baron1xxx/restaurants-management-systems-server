@@ -4,5 +4,6 @@ export const authSuccessMessage = {
   ACTIVATE_EMAIL_SEND_SUCCESSFULLY: 'Go to your email to activate your account',
   USER_ACTIVATED: 'Your account success activated. Login please!',
   FORGOT_PASSWORD_MESSAGE: 'Click on the link sent to your email',
-  SUCCESS_CHANGE_PASSWORD: 'Password changed successfully'
+  SUCCESS_CHANGE_PASSWORD: 'Password changed successfully',
+  LOGOUT_SUCCESSFULLY: 'You are successfully logout.'
 };

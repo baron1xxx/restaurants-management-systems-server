@@ -12,6 +12,7 @@ const router = Router();
 router
   .get('/activate/:token', checkActivateTokenMiddleware, authController.activate)
   .get('/user', jwtAccessTokenMiddlewar, authController.getUserById)
+  .get('/logout', authController.logout)
   .post('/activate', emailValidateMiddleware, authController.refreshActivate)
   .post('/register', userValidateMiddleware, authController.register)
   .post('/login', loginValidateMiddleware, authController.login)

@@ -14,10 +14,6 @@ export const authErrorMessages = {
   NOT_VALID_ACCESS_TOKEN: 'Not valid access token',
   NOT_VALID_REFRESH_TOKEN: 'Not valid refresh token',
   NOT_VALID_ACTIVATE_TOKEN: 'Not valid activate link. Enter your email and I’m re-sending you email for activation.',
-  NOT_VALID_CHANGE_PASSWORD_TOKEN: 'Not valid changePassword token',
   AUTH_TOKENS_EXIST: 'You are logged in. Auth tokens exist',
-  PASSWORD_NOT_VALID: 'Password not valid',
-  PASSWORDS_NOT_MATCH: 'The password do not match!',
-  ENTER_NEW_PASSWORD: 'Enter new password',
-  ENTER_CONFIRM_NEW_PASSWORD: 'Enter confirm new password'
+  PASSWORDS_NOT_CHANGED: 'Password do not changed!'
 };

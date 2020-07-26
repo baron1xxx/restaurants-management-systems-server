@@ -94,6 +94,35 @@ export const getUserById = async (req, res, next) => {
   }
 };
 
+export const forgotPassword = async (req, res, next) => {
+  try {
+    const { user, body: { email } } = req;
+    const message = await authService.forgotPassword(user, email);
+    res.status(200)
+      .json({
+        error: false,
+        data: null,
+        message
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+
+export const changePassword = async (req, res, next) => {
+  try {
+    await authService.changePassword(req.user, req.body);
+    res.status(204)
+      .json({
+        error: false,
+        data: null,
+        message: authSuccessMessage.SUCCESS_CHANGE_PASSWORD
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+
 export const logout = async (req, res, next) => {
   try {
     const accessToken = extractAuthJwtToken(req);

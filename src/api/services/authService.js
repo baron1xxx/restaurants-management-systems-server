@@ -15,22 +15,47 @@ import {
   GOOGLE_SERVICE,
   ACTIVATE_SERVICE,
   REFRESH_ACTIVATE_SERVICE,
-  AUTH_USER_SERVICE
+  AUTH_USER_SERVICE,
+  CHANGE_PASSWORD_SERVICE
 } from '../../constants/servicesName/authServicesName';
-import { ACTIVATE_ACCOUNT } from '../../constants/emailSubject';
+import {
+  ACTIVATE_ACCOUNT,
+  FORGOT_PASSWORD
+} from '../../constants/emailSubject';
 import { secret } from '../../config/jwtConfig';
-import { activateAccountTemplate } from '../../template/emailTemplate';
+import {
+  activateAccountTemplate,
+  forgotPasswordTemplate
+} from '../../template/emailTemplate';
 import { authSuccessMessage } from '../../constants/customSuccessMessage/authSuccessMessage';
 
-export const register = async ({ email, password, authMethod, role, ...userData }) => {
+export const register = async ({
+  email,
+  password,
+  authMethod,
+  role,
+  ...userData
+}) => {
   try {
     const credentialByEmail = await credentialRepository.getByEmail(email);
-    if (credentialByEmail) throw new ErrorHandler(UNAUTHORIZED, authErrorMessages.USER_EXITS, REGISTER_SERVICE);
+    if (credentialByEmail) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.USER_EXITS,
+        REGISTER_SERVICE
+      );
+    }
 
     const { id: roleId } = await roleRepository.getByName(role);
 
     const user = await userRepository.create({ ...userData, roleId });
-    if (!user) throw new ErrorHandler(UNAUTHORIZED, authErrorMessages.USER_NOT_CREATE, REGISTER_SERVICE);
+    if (!user) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.USER_NOT_CREATE,
+        REGISTER_SERVICE
+      );
+    }
 
     await credentialRepository.create({
       authMethod,
@@ -42,7 +67,9 @@ export const register = async ({ email, password, authMethod, role, ...userData 
     emailTransporter(
       email,
       ACTIVATE_ACCOUNT,
-      activateAccountTemplate(createToken({ userId: user.id }, secret.activateToken, '5m'))
+      activateAccountTemplate(
+        createToken({ userId: user.id }, secret.activateToken, '5m')
+      )
     );
 
     return user;
@@ -70,7 +97,7 @@ export const login = async ({ email, password, authMethod }) => {
         LOGIN_SERVICE
       );
     }
-    if (!await compare(password, credentialByEmail.password)) {
+    if (!(await compare(password, credentialByEmail.password))) {
       throw new ErrorHandler(
         UNAUTHORIZED,
         authErrorMessages.PASSWORDS_NOT_MATCH,
@@ -97,23 +124,37 @@ export const login = async ({ email, password, authMethod }) => {
     const accessToken = createToken({}, secret.accessToken, '15m');
     const refreshToken = createToken({}, secret.refreshToken, '1d');
 
-    await authTokenRepository.create({ accessToken, refreshToken, userId: user.id });
+    await authTokenRepository.create({
+      accessToken,
+      refreshToken,
+      userId: user.id
+    });
 
     return {
       accessToken: `Bearer ${accessToken}`,
-      refreshToken };
+      refreshToken
+    };
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, e.controller);
   }
 };
 
-export const google = async ({ email, password, authMethod, imageUrl: link, ...userData }) => {
+export const google = async ({
+  email,
+  password,
+  authMethod,
+  imageUrl: link,
+  ...userData
+}) => {
   try {
     let credential = await credentialRepository.getByEmail(email);
 
     if (!credential) {
       const { id: imageId } = await imageRepository.create({ link });
-      const { id: userId } = await userRepository.create({ imageId, ...userData });
+      const { id: userId } = await userRepository.create({
+        imageId,
+        ...userData
+      });
       credential = await credentialRepository.create({
         email,
         authMethod,
@@ -130,7 +171,7 @@ export const google = async ({ email, password, authMethod, imageUrl: link, ...u
         GOOGLE_SERVICE
       );
     }
-    if (!await compare(password, credential.password)) {
+    if (!(await compare(password, credential.password))) {
       throw new ErrorHandler(
         UNAUTHORIZED,
         authErrorMessages.PASSWORDS_NOT_MATCH,
@@ -151,11 +192,16 @@ export const google = async ({ email, password, authMethod, imageUrl: link, ...u
     const accessToken = createToken({}, secret.accessToken, '15m');
     const refreshToken = createToken({}, secret.refreshToken, '1d');
 
-    await authTokenRepository.create({ accessToken, refreshToken, userId: user.id });
+    await authTokenRepository.create({
+      accessToken,
+      refreshToken,
+      userId: user.id
+    });
 
     return {
       accessToken: `Bearer ${accessToken}`,
-      refreshToken };
+      refreshToken
+    };
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, e.controller);
   }
@@ -163,7 +209,9 @@ export const google = async ({ email, password, authMethod, imageUrl: link, ...u
 
 export const activate = async ({ id }) => {
   try {
-    const userIsActivated = await userRepository.updateById(id, { isActivated: true });
+    const userIsActivated = await userRepository.updateById(id, {
+      isActivated: true
+    });
 
     if (!userIsActivated) {
       throw new ErrorHandler(
@@ -194,7 +242,9 @@ export const refreshActivate = async email => {
     emailTransporter(
       email,
       ACTIVATE_ACCOUNT,
-      activateAccountTemplate(createToken({ userId: user.id }, secret.activateToken, '5m'))
+      activateAccountTemplate(
+        createToken({ userId: user.id }, secret.activateToken, '5m')
+      )
     );
 
     return authSuccessMessage.ACTIVATE_EMAIL_SEND_SUCCESSFULLY;
@@ -216,7 +266,11 @@ export const getUserById = async userId => {
     }
 
     const {
-      id, firstName, lastName, roleId, imageId,
+      id,
+      firstName,
+      lastName,
+      roleId,
+      imageId,
       credential: { email },
       role: { role },
       image
@@ -228,9 +282,38 @@ export const getUserById = async userId => {
   }
 };
 
+export const forgotPassword = async ({ id }, email) => {
+  try {
+    emailTransporter(
+      email,
+      FORGOT_PASSWORD,
+      forgotPasswordTemplate(createToken({ userId: id }, secret.changePasswordToken, '5m'))
+    );
+    return authSuccessMessage.FORGOT_PASSWORD_MESSAGE;
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller);
+  }
+};
+
+export const changePassword = async ({ id: userId }, { password }) => {
+  try {
+    const passwordChanged = await credentialRepository.updateById(userId, { password: await encrypt(password) });
+    if (!passwordChanged) {
+      throw new ErrorHandler(
+        UNAUTHORIZED,
+        authErrorMessages.PASSWORDS_NOT_CHANGED,
+        CHANGE_PASSWORD_SERVICE
+      );
+    }
+    return passwordChanged;
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, e.controller || 'changePassword service');
+  }
+};
+
 export const logout = async accessToken => {
   try {
-    return (await authTokenRepository.deleteByAccessToken(accessToken));
+    return await authTokenRepository.deleteByAccessToken(accessToken);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, e.controller);
   }

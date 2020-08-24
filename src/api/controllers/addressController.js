@@ -14,3 +14,17 @@ export const getRegionsByName = async (req, res, next) => {
   }
 };
 
+export const getCitiesByRegionIdByName = async (req, res, next) => {
+  try {
+    const { regionId, city } = req.query;
+    const cities = await addressService.getCitiesByRegionIdByName(regionId, city);
+    res.status(200)
+      .json({
+        error: false,
+        data: cities
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+

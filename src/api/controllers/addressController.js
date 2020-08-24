@@ -1,0 +1,16 @@
+import * as addressService from '../services/addressService';
+
+export const getRegionsByName = async (req, res, next) => {
+  try {
+    const { region } = req.query;
+    const regions = await addressService.getRegionsByName(region);
+    res.status(200)
+      .json({
+        error: false,
+        data: regions
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+

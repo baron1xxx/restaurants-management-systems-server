@@ -28,3 +28,17 @@ export const getCitiesByRegionIdByName = async (req, res, next) => {
   }
 };
 
+export const getStreetsByCityIdByName = async (req, res, next) => {
+  try {
+    const { cityId, street } = req.query;
+    const streets = await addressService.getStreetsByCityIdByName(cityId, street);
+    res.status(200)
+      .json({
+        error: false,
+        data: streets
+      });
+  } catch (e) {
+    next({ status: e.status, message: e.message, controller: e.controller });
+  }
+};
+

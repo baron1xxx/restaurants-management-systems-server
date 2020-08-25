@@ -1,6 +1,6 @@
 export default (orm, DataTypes) => {
   const HouseNumber = orm.define('houseNumber', {
-    name: {
+    number: {
       allowNull: false,
       type: DataTypes.STRING
     },

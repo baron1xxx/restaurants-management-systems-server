@@ -11,6 +11,7 @@ const Region = orm.import('./region');
 const City = orm.import('./city');
 const Street = orm.import('./street');
 const HouseNumber = orm.import('./houseNumber');
+const Address = orm.import('./address');
 
 associate({
   User,
@@ -21,7 +22,8 @@ associate({
   Region,
   City,
   Street,
-  HouseNumber
+  HouseNumber,
+  Address
 });
 
 export {
@@ -33,5 +35,6 @@ export {
   Region as RegionModel,
   City as CityModel,
   Street as StreetModel,
-  HouseNumber as HouseNumberModel
+  HouseNumber as HouseNumberModel,
+  Address as AddressModel
 };

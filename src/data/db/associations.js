@@ -4,7 +4,12 @@ export default models => {
     Image,
     AuthToken,
     Credential,
-    Role
+    Role,
+    Region,
+    City,
+    Street,
+    HouseNumber,
+    Address
   } = models;
 
   User.hasMany(AuthToken);
@@ -19,4 +24,19 @@ export default models => {
   Role.hasOne(User);
 
   Image.hasOne(User);
+
+  Region.hasMany(City);
+
+  City.hasMany(Street);
+  City.belongsTo(Region);
+
+  Street.hasMany(HouseNumber);
+  Street.belongsTo(City);
+
+  HouseNumber.belongsTo(Street);
+
+  Address.belongsTo(Region);
+  Address.belongsTo(City);
+  Address.belongsTo(Street);
+  Address.belongsTo(HouseNumber);
 };

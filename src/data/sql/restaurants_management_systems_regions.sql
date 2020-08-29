@@ -1,4 +1,4 @@
-create table regions
+create table if not exists regions
 (
     id        int auto_increment
         primary key,

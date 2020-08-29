@@ -8,7 +8,8 @@ export default models => {
     Region,
     City,
     Street,
-    HouseNumber
+    HouseNumber,
+    Address
   } = models;
 
   User.hasOne(AuthToken);
@@ -29,4 +30,9 @@ export default models => {
   Street.belongsTo(City);
 
   HouseNumber.belongsTo(Street);
+
+  Address.belongsTo(Region);
+  Address.belongsTo(City);
+  Address.belongsTo(Street);
+  Address.belongsTo(HouseNumber);
 };

@@ -1,5 +1,5 @@
 export const authErrorMessages = {
-  USER_EXITS: 'This user already exists',
+  USER_EXISTS: 'This user already exists',
   USER_NOT_CREATE: 'User not create',
   USER_NOT_FOUND: 'User not found',
   USER_NOT_ACTIVATED: 'User not activated',

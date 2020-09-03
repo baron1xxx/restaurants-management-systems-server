@@ -1,3 +1,4 @@
+import { ErrorHandler } from '../../../helpers/error/ErrorHandler';
 import regionRepository from '../../../data/repositories/regionRepository';
 import cityRepository from '../../../data/repositories/cityRepository';
 import streetRepository from '../../../data/repositories/streetRepository';
@@ -7,40 +8,46 @@ import { addressErrorMessages } from '../../../constants/customErrorMessage/addr
 import { addressControllerName } from '../../../constants/controllerName/addressControllerName';
 import { NOT_FOUND, BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 
+// eslint-disable-next-line consistent-return
 export default async (req, res, next) => {
   try {
     const { regionId, cityId, streetId, houseNumber } = req.body;
     // Check Region
     const region = await regionRepository.getById(regionId);
     if (!region) {
-      next({
-        status: NOT_FOUND,
-        message: addressErrorMessages.REGION_NOT_EXISTS,
-        controller: addressControllerName.CHECK_ADDRESS_MIDDLEWARE });
+      return next(new ErrorHandler(
+        NOT_FOUND,
+        addressErrorMessages.REGION_NOT_EXISTS,
+        addressControllerName.CHECK_ADDRESS_MIDDLEWARE
+      ));
     }
     // Check City by regionId
     const city = await cityRepository.getOne({ id: cityId, regionId });
     if (!city) {
-      next({
-        status: NOT_FOUND,
-        message: addressErrorMessages.CITY_NOT_EXISTS,
-        controller: addressControllerName.CHECK_ADDRESS_MIDDLEWARE });
+      return next(new ErrorHandler(
+        NOT_FOUND,
+        addressErrorMessages.CITY_NOT_EXISTS,
+        addressControllerName.CHECK_ADDRESS_MIDDLEWARE
+      ));
     }
     // Check Street by cityId
     const street = await streetRepository.getOne({ id: streetId, cityId });
+
     if (!street) {
-      next({
-        status: NOT_FOUND,
-        message: addressErrorMessages.STREET_NOT_EXISTS,
-        controller: addressControllerName.CHECK_ADDRESS_MIDDLEWARE });
+      return next(new ErrorHandler(
+        NOT_FOUND,
+        addressErrorMessages.STREET_NOT_EXISTS,
+        addressControllerName.CHECK_ADDRESS_MIDDLEWARE
+      ));
     }
     // Check HouseNumber by streetId
-    const [createdHouseNumber] = await houseNumberRepository.findOrCreate({ number: houseNumber, cityId });
-    if (createdHouseNumber) {
-      next({
-        status: BEAD_REQUEST,
-        message: addressErrorMessages.ADDRESS_EXISTS,
-        controller: addressControllerName.CHECK_ADDRESS_MIDDLEWARE });
+    const [createdHouseNumber, created] = await houseNumberRepository.findOrCreate(houseNumber, streetId);
+    if (!created) {
+      return next(new ErrorHandler(
+        BEAD_REQUEST,
+        addressErrorMessages.ADDRESS_EXISTS,
+        addressControllerName.CHECK_ADDRESS_MIDDLEWARE
+      ));
     }
 
     const address = await addressRepository.create(
@@ -50,10 +57,9 @@ export default async (req, res, next) => {
         streetId,
         houseNumberId: createdHouseNumber.id }
     );
-
     req.address = address;
     next();
   } catch (e) {
-    next({ status: e.status, message: e.message, controller: e.controller });
+    next(new ErrorHandler(e.status, e.message, e.controller));
   }
 };

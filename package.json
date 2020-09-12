@@ -25,6 +25,7 @@
   "homepage": "https://github.com/baron1xxx/restaurants-management-systems-server#readme",
   "dependencies": {
     "@babel/polyfill": "7.8.7",
+    "@googlemaps/google-maps-services-js": "^3.1.6",
     "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",

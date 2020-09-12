@@ -6,7 +6,7 @@ export default async (req, res, next) => {
     const { body: { email } } = req;
     const credential = await credentialRepository.getByEmail(email);
     if (!credential) {
-      next({ status: 401, message: authErrorMessages.USER_EXITS, controller: 'checkEmailMiddleware' });
+      next({ status: 401, message: authErrorMessages.USER_EXISTS, controller: 'checkEmailMiddleware' });
     }
     const { user } = credential;
     req.user = user;

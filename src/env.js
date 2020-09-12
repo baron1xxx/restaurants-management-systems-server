@@ -31,6 +31,9 @@ const env = {
   gmail: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
+  },
+  googleMaps: {
+    apiKey: process.env.GOOGLE_MAPS_API_KEY
   }
 };
 

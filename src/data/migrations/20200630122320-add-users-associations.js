@@ -7,8 +7,8 @@ export default {
           model: 'images',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('credentials', 'userId', {
         type: Sequelize.INTEGER,
@@ -16,8 +16,8 @@ export default {
           model: 'users',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('authTokens', 'userId', {
         type: Sequelize.INTEGER,
@@ -25,8 +25,8 @@ export default {
           model: 'users',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('users', 'roleId', {
         type: Sequelize.INTEGER,
@@ -34,7 +34,7 @@ export default {
           model: 'roles',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
+        onUpdate: 'SET NULL',
         onDelete: 'SET NULL'
       }, { transaction })
     ])),

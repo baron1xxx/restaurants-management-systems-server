@@ -3,16 +3,18 @@ import regionRepository from '../../../data/repositories/regionRepository';
 import cityRepository from '../../../data/repositories/cityRepository';
 import streetRepository from '../../../data/repositories/streetRepository';
 import houseNumberRepository from '../../../data/repositories/houseNumberRepository';
-import * as addressService from '../../services/addressService';
 import { addressErrorMessages } from '../../../constants/customErrorMessage/addressErrorMessage';
 import { addressControllerName } from '../../../constants/controllerName/addressControllerName';
-// eslint-disable-next-line no-unused-vars
 import { NOT_FOUND, BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 
 // eslint-disable-next-line consistent-return
 export default async (req, res, next) => {
   try {
-    const { regionId, cityId, streetId, houseNumber } = req.body;
+    const {
+      regionId,
+      cityId,
+      streetId,
+      houseNumber } = req.body;
     // Check Region
     const region = await regionRepository.getById(regionId);
     if (!region) {
@@ -23,7 +25,10 @@ export default async (req, res, next) => {
       ));
     }
     // Check City by regionId
-    const city = await cityRepository.getOne({ id: cityId, regionId });
+    const city = await cityRepository.getOne(
+      { id: cityId,
+        regionId }
+    );
     if (!city) {
       return next(new ErrorHandler(
         NOT_FOUND,
@@ -42,24 +47,20 @@ export default async (req, res, next) => {
     }
 
     // Check HouseNumber by streetId
-    // eslint-disable-next-line no-unused-vars
     const [createdHouseNumber, created] = await houseNumberRepository.findOrCreate(houseNumber, streetId);
-    // if (!created) {
-    //   return next(new ErrorHandler(
-    //     BEAD_REQUEST,
-    //     addressErrorMessages.ADDRESS_EXISTS,
-    //     addressControllerName.CHECK_ADDRESS_MIDDLEWARE
-    //   ));
-    // }
+    if (!created) {
+      return next(new ErrorHandler(
+        BEAD_REQUEST,
+        addressErrorMessages.ADDRESS_EXISTS,
+        addressControllerName.CHECK_ADDRESS_MIDDLEWARE
+      ));
+    }
 
-    const { id } = await addressService.create(
-      {
-        regionId,
-        cityId,
-        streetId,
-        houseNumberId: createdHouseNumber.id }
-    );
-    req.address = await addressService.getById(id);
+    req.address = {
+      regionId,
+      cityId,
+      streetId,
+      houseNumberId: createdHouseNumber.id };
     next();
   } catch (e) {
     next(new ErrorHandler(e.status, e.message, e.controller));

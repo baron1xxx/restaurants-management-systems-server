@@ -49,5 +49,3 @@ export const openingCreateValidator = Joi.object({
       'string.pattern.base': 'End time does not match pattern.'
     })
 });
-
-

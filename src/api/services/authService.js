@@ -41,7 +41,7 @@ export const register = async ({
     if (credentialByEmail) {
       throw new ErrorHandler(
         UNAUTHORIZED,
-        authErrorMessages.USER_EXITS,
+        authErrorMessages.USER_EXISTS,
         REGISTER_SERVICE
       );
     }

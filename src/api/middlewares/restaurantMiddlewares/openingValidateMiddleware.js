@@ -20,7 +20,7 @@ export default (req, res, next) => {
       return next(
         new ErrorHandler(
           BEAD_REQUEST,
-          error.details[0].message,
+          `${opening[error.details[0].path[0]]} ${error.details[0].message}`,
           'restaurantValidateMiddleware'
         )
       );

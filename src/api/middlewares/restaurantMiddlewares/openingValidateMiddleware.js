@@ -6,7 +6,16 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 export default (req, res, next) => {
   try {
     const { body: { opening } } = req;
+    console.log(opening);
     const { error, value: restaurant } = openingCreateValidator.validate(opening);
+    if (error) {
+      console.log('---------------------------------------------');
+      console.log(error);
+      console.log(error.details[0].path);
+      console.log(error.details[0].context);
+      console.log('---------------------------------------------');
+    }
+
     if (error) {
       return next(
         new ErrorHandler(

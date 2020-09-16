@@ -10,7 +10,9 @@ export default (req, res, next) => {
         name,
         description,
         telephone } } = req;
-    const { error, value: restaurant } = restaurantCreateValidator.validate({ name, description, telephone });
+    const {
+      error,
+      value: restaurant } = restaurantCreateValidator.validate({ name, description, telephone });
     if (error) {
       return next(
         new ErrorHandler(

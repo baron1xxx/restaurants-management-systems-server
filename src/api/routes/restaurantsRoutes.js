@@ -3,6 +3,8 @@ import jwtAccessTokenMiddleware from '../middlewares/authMiddlewares/jwtAccessTo
 import checkAddressMiddleware from '../middlewares/addressMiddlewares/checkAddressMiddleware';
 import restaurantValidateMiddleware from '../middlewares/restaurantMiddlewares/restaurantValidateMiddleware';
 import openingValidateMiddleware from '../middlewares/restaurantMiddlewares/openingValidateMiddleware';
+import chackRestaurantExistsMiddleware from '../middlewares/restaurantMiddlewares/chackRestaurantExistsMiddleware';
+import imageMiddleware from '../middlewares/imageMiddlewares/imageMiddleware';
 import * as restaurantController from '../controllers/restaurantController';
 
 const router = Router();
@@ -10,9 +12,11 @@ const router = Router();
 router
   .post('/',
     jwtAccessTokenMiddleware,
-    checkAddressMiddleware,
+    imageMiddleware,
     restaurantValidateMiddleware,
     openingValidateMiddleware,
+    checkAddressMiddleware,
+    chackRestaurantExistsMiddleware,
     restaurantController.create);
 
 export default router;

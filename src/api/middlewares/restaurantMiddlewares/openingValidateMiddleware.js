@@ -7,7 +7,9 @@ export default (req, res, next) => {
   try {
     const { body: { opening } } = req;
 
-    const { error, value: validOpening } = openingCreateValidator.validate(opening);
+    const {
+      error,
+      value: validOpening } = openingCreateValidator.validate(opening);
 
     if (error) {
       const { path, message } = error.details[0];

@@ -7,7 +7,8 @@ import {
   CityModel,
   StreetModel,
   HouseNumberModel,
-  OpeningModel
+  OpeningModel,
+  ImageModel
 } from '../models/index';
 
 class RestaurantRepository extends BaseRepository {
@@ -42,6 +43,10 @@ class RestaurantRepository extends BaseRepository {
         {
           model: OpeningModel,
           attributes: ['id', 'day', 'start', 'end']
+        },
+        {
+          model: ImageModel,
+          attributes: ['id', 'link']
         }
       ]
     });

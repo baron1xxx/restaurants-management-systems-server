@@ -11,7 +11,6 @@ export default (req, res, next) => {
         description,
         telephone } } = req;
 
-    console.log({ name, description, telephone });
     const {
       error,
       value: restaurant } = restaurantCreateValidator.validate({ name, description, telephone });

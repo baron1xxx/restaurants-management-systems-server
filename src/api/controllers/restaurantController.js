@@ -6,11 +6,12 @@ export const create = async (req, res, next) => {
     const {
       address,
       opening,
+      file,
       restaurant: restaurantData,
       user: { id: userId }
     } = req;
 
-    const restaurant = await restaurantService.create(address, restaurantData, opening, userId);
+    const restaurant = await restaurantService.create(address, restaurantData, opening, file, userId);
 
     res.status(200)
       .json({

@@ -34,6 +34,10 @@ const env = {
   },
   googleMaps: {
     apiKey: process.env.GOOGLE_MAPS_API_KEY
+  },
+  imgur: {
+    imgurId: process.env.IMGUR_ID,
+    imgurSecret: process.env.IMGUR_SECRET
   }
 };
 

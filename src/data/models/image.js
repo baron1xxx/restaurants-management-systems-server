@@ -1,8 +1,12 @@
 export default (orm, DataTypes) => {
   const Image = orm.define('image', {
     link: {
-      allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    deleteHash: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

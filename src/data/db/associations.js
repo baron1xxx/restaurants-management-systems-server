@@ -28,6 +28,7 @@ export default models => {
   Role.hasOne(User);
 
   Image.hasOne(User);
+  Image.hasOne(Restaurant);
 
   Region.hasMany(City);
   Region.hasMany(Address);
@@ -49,6 +50,7 @@ export default models => {
   Restaurant.belongsTo(User);
   Restaurant.belongsTo(Address);
   Restaurant.belongsTo(Geolocation);
+  Restaurant.belongsTo(Image);
   Restaurant.hasMany(Opening);
 
   Geolocation.hasOne(Restaurant);

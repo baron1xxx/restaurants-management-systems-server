@@ -5,6 +5,7 @@ import * as openingService from './openingService';
 import * as imageService from './imageService';
 import restaurantRepository from '../../data/repositories/restaurantRepository';
 import { addressObjToString } from '../../helpers/addressObjToString';
+import { countPages, offset } from '../../helpers/paginationHelper';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 
 export const create = async (address, restaurantData, opening, file, userId) => {
@@ -39,10 +40,24 @@ export const create = async (address, restaurantData, opening, file, userId) => 
     throw new ErrorHandler(e.status, e.message, e.message);
   }
 };
+
+export const getRestaurants = async ({ limit, page }) => {
+  try {
+    const restaurantsCount = await restaurantRepository.countAll();
+
+    return {
+      restaurants: await restaurantRepository.getAll(limit, offset(page, limit)),
+      totalPage: countPages(restaurantsCount, limit)
+    };
+  } catch (e) {
+    throw new ErrorHandler(e.status, e.message, 'Restaurant service geAll()');
+  }
+};
+
 export const getById = async id => {
   try {
     return await restaurantRepository.getById(id);
   } catch (e) {
-    throw new ErrorHandler(e.status, e.message, 'Restaurant service create()');
+    throw new ErrorHandler(e.status, e.message, 'Restaurant service getById()');
   }
 };

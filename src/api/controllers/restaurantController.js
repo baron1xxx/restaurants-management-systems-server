@@ -22,3 +22,19 @@ export const create = async (req, res, next) => {
     next(new ErrorHandler(e.status, e.message, e.controller));
   }
 };
+
+export const getRestaurants = async (req, res, next) => {
+  try {
+    const { pagination } = req;
+
+    const restaurants = await restaurantService.getRestaurants(pagination);
+
+    res.status(200)
+      .json({
+        error: false,
+        data: restaurants
+      });
+  } catch (e) {
+    next(new ErrorHandler(e.status, e.message, e.controller));
+  }
+};

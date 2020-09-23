@@ -10,7 +10,6 @@ import {
   OpeningModel,
   ImageModel
 } from '../models/index';
-import { LIMIT, OFFSET } from '../../constants/paginationConstants';
 
 const include = [
   {
@@ -55,8 +54,18 @@ class RestaurantRepository extends BaseRepository {
     });
   }
 
-  getAll(limit = LIMIT, offset = OFFSET) {
+  getAll(filter) {
+    const {
+      limit,
+      offset,
+      userId
+    } = filter;
+
+    const where = {};
+    if (userId) Object.assign(where, { userId });
+
     return this.model.findAll({
+      where,
       include,
       limit,
       offset

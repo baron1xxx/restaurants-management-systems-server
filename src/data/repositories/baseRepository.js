@@ -21,16 +21,16 @@ export default class BaseRepository {
     return this.model.create(data);
   }
 
-  async updateById(id, data) {
+  async updateById(findObj, data) {
     const [result] = await this.model.update(data, {
-      where: { id }
+      where: { ...findObj }
     });
     return result === 1;
   }
 
-  deleteById(id) {
+  deleteById(findObj) {
     return this.model.destroy({
-      where: { id }
+      where: { ...findObj }
     });
   }
 }

@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import BaseRepository from './baseRepository';
 import {
   RestaurantModel,
@@ -10,6 +11,8 @@ import {
   OpeningModel,
   ImageModel
 } from '../models/index';
+
+const { Op } = Sequelize;
 
 const include = [
   {
@@ -47,6 +50,23 @@ const include = [
   }
 ];
 
+const getWhere = filter => {
+  const {
+    userId,
+    name
+  } = filter;
+  const where = {
+    isDeleted: false
+  };
+  if (userId) Object.assign(where, { userId });
+  if (name) {
+    Object.assign(where, { name: {
+      [Op.like]: `%${name}%`
+    } });
+  }
+  return where;
+};
+
 class RestaurantRepository extends BaseRepository {
   getById(id) {
     return this.model.findByPk(id, {
@@ -57,12 +77,15 @@ class RestaurantRepository extends BaseRepository {
   getAll(filter) {
     const {
       limit,
-      offset,
-      userId
+      offset
     } = filter;
-
-    const where = {};
-    if (userId) Object.assign(where, { userId });
+    console.log('8888888888888888888888888');
+    console.log(filter);
+    console.log('8888888888888888888888888');
+    const where = getWhere(filter);
+    console.log('--------------------------');
+    console.log(where);
+    console.log('--------------------------');
 
     return this.model.findAll({
       where,
@@ -72,8 +95,10 @@ class RestaurantRepository extends BaseRepository {
     });
   }
 
-  countAll() {
-    return this.model.count();
+  countAll(filter) {
+    const where = getWhere(filter);
+    console.log(where);
+    return this.model.count({ where });
   }
 }
 

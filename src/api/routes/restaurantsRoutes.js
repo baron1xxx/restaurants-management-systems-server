@@ -11,11 +11,14 @@ import * as restaurantController from '../controllers/restaurantController';
 const router = Router();
 
 router
-  .get('/', paginationValidateMiddleware, restaurantController.getRestaurants)
+  .get('/',
+    paginationValidateMiddleware,
+    restaurantController.getRestaurants)
   .get('/byUserId',
     jwtAccessTokenMiddleware,
     paginationValidateMiddleware,
     restaurantController.getRestaurantsByUserId)
+  .get('/:id', restaurantController.getById)
   .post('/',
     jwtAccessTokenMiddleware,
     imageMiddleware,
@@ -23,6 +26,13 @@ router
     openingValidateMiddleware,
     checkAddressMiddleware,
     checkRestaurantExistsMiddleware,
-    restaurantController.create);
+    restaurantController.create)
+  .put('/:id',
+    jwtAccessTokenMiddleware,
+    imageMiddleware,
+    restaurantController.updateRestaurant)
+  .delete('/:id',
+    jwtAccessTokenMiddleware,
+    restaurantController.removeRestaurant);
 
 export default router;

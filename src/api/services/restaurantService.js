@@ -7,6 +7,7 @@ import restaurantRepository from '../../data/repositories/restaurantRepository';
 import { addressObjToString } from '../../helpers/addressObjToString';
 import { countPages, offset } from '../../helpers/paginationHelper';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
+import { LIMIT, PAGE } from '../../constants/paginationConstants';
 
 export const create = async (address, restaurantData, opening, file, userId) => {
   try {
@@ -41,12 +42,15 @@ export const create = async (address, restaurantData, opening, file, userId) => 
   }
 };
 
-export const getRestaurants = async ({ limit, page }) => {
+export const getRestaurants = async filter => {
   try {
+    const { limit = LIMIT, page = PAGE } = filter;
     const restaurantsCount = await restaurantRepository.countAll();
 
     return {
-      restaurants: await restaurantRepository.getAll(limit, offset(page, limit)),
+      restaurants: await restaurantRepository.getAll({
+        ...filter,
+        offset: offset(page, limit) }),
       totalPage: countPages(restaurantsCount, limit)
     };
   } catch (e) {

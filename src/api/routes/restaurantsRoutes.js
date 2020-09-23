@@ -12,6 +12,10 @@ const router = Router();
 
 router
   .get('/', paginationValidateMiddleware, restaurantController.getRestaurants)
+  .get('/byUserId',
+    jwtAccessTokenMiddleware,
+    paginationValidateMiddleware,
+    restaurantController.getRestaurantsByUserId)
   .post('/',
     jwtAccessTokenMiddleware,
     imageMiddleware,

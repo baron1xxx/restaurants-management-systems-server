@@ -9,8 +9,8 @@ import { countPages, offset } from '../../helpers/paginationHelper';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 import { LIMIT, PAGE } from '../../constants/paginationConstants';
 import { restaurantErrorMessages } from '../../constants/customErrorMessage/restaurantErrorMessage';
-import { restaurantSuccessMessage } from '../../constants/customSuccessMessage/restaurantSuccessMessage';
-import { NOT_FOUND } from '../../constants/responseStatusCodes';
+// import { restaurantSuccessMessage } from '../../constants/customSuccessMessage/restaurantSuccessMessage';
+import { BEAD_REQUEST, NOT_FOUND, UNAUTHORIZED } from '../../constants/responseStatusCodes';
 
 export const create = async (address, restaurantData, opening, file, userId) => {
   try {
@@ -52,11 +52,7 @@ export const create = async (address, restaurantData, opening, file, userId) => 
 export const getRestaurants = async filter => {
   try {
     const { limit = LIMIT, page = PAGE } = filter;
-    console.log('**********************');
-    console.log(filter);
-    console.log('**********************');
     const restaurantsCount = await restaurantRepository.countAll(filter);
-    console.log(restaurantsCount);
 
     return {
       restaurants: await restaurantRepository.getAll({
@@ -89,34 +85,63 @@ export const getById = async id => {
   }
 };
 
-export const update = async (find, data) => {
+export const update = async (id, data) => {
   try {
-    const restaurantUpdated = await restaurantRepository.updateById(find, data);
-    if (!restaurantUpdated) {
+    const { file, user, ...restaurantBody } = data;
+    const restaurant = await getById(id);
+    if (restaurant.userId !== user.id) {
       throw new ErrorHandler(
-        NOT_FOUND,
-        restaurantErrorMessages.RESTAURANT_NOT_FOUND,
-        'Restaurant update()'
+        UNAUTHORIZED,
+        restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
+        'Restaurant update() getById()'
       );
     }
-    return restaurantSuccessMessage.RESTAURANT_SUCCESS_UPDATED;
+
+    const restaurantUpdate = async (restaurantId, restaurantData) => {
+      const restaurantIsUpdated = await restaurantRepository.updateById(restaurantId, restaurantData);
+      if (!restaurantIsUpdated) {
+        throw new ErrorHandler(
+          BEAD_REQUEST,
+          restaurantErrorMessages.RESTAURANT_NOT_UPDATED,
+          'Restaurant updateById()'
+        );
+      }
+      // eslint-disable-next-line no-return-await
+      return await getById(restaurantId);
+    };
+
+    if (file) {
+      const { id: imageId, deleteHash } = await imageService.getById(restaurant.image.id);
+      await imageService.update(imageId, deleteHash, file);
+      return await getById(id);
+    }
+
+    return await restaurantUpdate(id, restaurantBody);
   } catch (e) {
-    throw new ErrorHandler(e.status, e.message, 'Restaurant service getById()');
+    throw new ErrorHandler(e.status, e.message, 'Restaurant service update()');
   }
 };
 
-export const remove = async find => {
-  try {
-    const restaurantDeleted = await restaurantRepository.updateById(find, { isDeleted: true });
-    if (!restaurantDeleted) {
-      throw new ErrorHandler(
-        NOT_FOUND,
-        restaurantErrorMessages.RESTAURANT_NOT_FOUND,
-        'Restaurant delete()'
-      );
-    }
-    return restaurantSuccessMessage.RESTAURANT_SUCCESS_DELETED;
-  } catch (e) {
-    throw new ErrorHandler(e.status, e.message, e.controller);
-  }
-};
+// export const remove = async (id, user) => {
+//   try {
+//     const restaurant = await getById(id);
+//     if (restaurant.userId !== user.id) {
+//       throw new ErrorHandler(
+//         UNAUTHORIZED,
+//         restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
+//         'Restaurant remove() getById()'
+//       );
+//     }
+//     const restaurantDeleted = await restaurantRepository.updateById(find, { isDeleted: true });
+//     if (!restaurantDeleted) {
+//       throw new ErrorHandler(
+//         NOT_FOUND,
+//         restaurantErrorMessages.RESTAURANT_NOT_FOUND,
+//         'Restaurant delete()'
+//       );
+//     }
+//     return restaurantSuccessMessage.RESTAURANT_SUCCESS_DELETED;
+//   } catch (e) {
+//     throw new ErrorHandler(e.status, e.message, e.controller);
+//   }
+// };

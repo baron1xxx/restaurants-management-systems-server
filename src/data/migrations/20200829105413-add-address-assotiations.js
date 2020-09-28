@@ -7,8 +7,8 @@ export default {
           model: 'regions',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('streets', 'cityId', {
         type: Sequelize.INTEGER,
@@ -16,8 +16,8 @@ export default {
           model: 'cities',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('houseNumbers', 'streetId', {
         type: Sequelize.INTEGER,
@@ -25,8 +25,8 @@ export default {
           model: 'streets',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('addresses', 'regionId', {
         type: Sequelize.INTEGER,
@@ -34,8 +34,8 @@ export default {
           model: 'regions',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('addresses', 'cityId', {
         type: Sequelize.INTEGER,
@@ -43,8 +43,8 @@ export default {
           model: 'cities',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('addresses', 'streetId', {
         type: Sequelize.INTEGER,
@@ -52,8 +52,8 @@ export default {
           model: 'streets',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction }),
       queryInterface.addColumn('addresses', 'houseNumberId', {
         type: Sequelize.INTEGER,
@@ -61,8 +61,8 @@ export default {
           model: 'houseNumbers',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       }, { transaction })
     ])),
 

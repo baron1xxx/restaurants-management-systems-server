@@ -12,6 +12,12 @@ const City = orm.import('./city');
 const Street = orm.import('./street');
 const HouseNumber = orm.import('./houseNumber');
 const Address = orm.import('./address');
+// Geolocation models
+const Geolocation = orm.import('./geolocation');
+// Geolocation models
+const Opening = orm.import('./opening');
+// Restaurant model
+const Restaurant = orm.import('./restaurant');
 
 associate({
   User,
@@ -23,7 +29,10 @@ associate({
   City,
   Street,
   HouseNumber,
-  Address
+  Address,
+  Restaurant,
+  Geolocation,
+  Opening
 });
 
 export {
@@ -36,5 +45,8 @@ export {
   City as CityModel,
   Street as StreetModel,
   HouseNumber as HouseNumberModel,
-  Address as AddressModel
+  Address as AddressModel,
+  Restaurant as RestaurantModel,
+  Geolocation as GeolocationModel,
+  Opening as OpeningModel
 };

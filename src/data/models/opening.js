@@ -1,16 +1,20 @@
 export default (orm, DataTypes) => {
-  const Image = orm.define('image', {
-    link: {
+  const Opening = orm.define('opening', {
+    day: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    deleteHash: {
-      type: DataTypes.STRING,
+    start: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
+    end: {
+      type: DataTypes.TIME,
       allowNull: false
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {});
 
-  return Image;
+  return Opening;
 };

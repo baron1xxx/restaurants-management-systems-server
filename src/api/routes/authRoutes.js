@@ -7,14 +7,14 @@ import checkChangePasswordTokenMiddleware from '../middlewares/authMiddlewares/c
 import changePasswordValidateMiddleware from '../middlewares/authMiddlewares/changePasswordValidateMiddleware';
 import emailValidateMiddleware from '../middlewares/authMiddlewares/emailValidateMiddleware';
 import checkEmailMiddleware from '../middlewares/authMiddlewares/checkEmailMiddleware';
-import jwtAccessTokenMiddlewar from '../middlewares/authMiddlewares/jwtAccessTokenMiddlewar';
+import jwtAccessTokenMiddleware from '../middlewares/authMiddlewares/jwtAccessTokenMiddleware';
 import * as authController from '../controllers/authController';
 
 const router = Router();
 
 router
   .get('/activate/:token', checkActivateTokenMiddleware, authController.activate)
-  .get('/user', jwtAccessTokenMiddlewar, authController.getUserById)
+  .get('/user', jwtAccessTokenMiddleware, authController.getUserById)
   .get('/logout', authController.logout)
   .post('/activate', emailValidateMiddleware, authController.refreshActivate)
   .post('/register', userValidateMiddleware, authController.register)

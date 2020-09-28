@@ -9,11 +9,15 @@ export default models => {
     City,
     Street,
     HouseNumber,
-    Address
+    Address,
+    Geolocation,
+    Restaurant,
+    Opening
   } = models;
 
   User.hasMany(AuthToken);
   User.hasOne(Credential);
+  User.hasMany(Restaurant);
   User.belongsTo(Role);
   User.belongsTo(Image);
 
@@ -24,8 +28,10 @@ export default models => {
   Role.hasOne(User);
 
   Image.hasOne(User);
+  Image.hasOne(Restaurant);
 
   Region.hasMany(City);
+  Region.hasMany(Address);
 
   City.hasMany(Street);
   City.belongsTo(Region);
@@ -39,4 +45,15 @@ export default models => {
   Address.belongsTo(City);
   Address.belongsTo(Street);
   Address.belongsTo(HouseNumber);
+  Address.hasOne(Restaurant);
+
+  Restaurant.belongsTo(User);
+  Restaurant.belongsTo(Address);
+  Restaurant.belongsTo(Geolocation);
+  Restaurant.belongsTo(Image);
+  Restaurant.hasMany(Opening);
+
+  Geolocation.hasOne(Restaurant);
+
+  Opening.belongsTo(Restaurant);
 };

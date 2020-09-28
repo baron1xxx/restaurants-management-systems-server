@@ -28,9 +28,9 @@ export default class BaseRepository {
     return result === 1;
   }
 
-  deleteById(id) {
+  deleteById(findObj) {
     return this.model.destroy({
-      where: { id }
+      where: { ...findObj }
     });
   }
 }

@@ -91,7 +91,6 @@ class RestaurantRepository extends BaseRepository {
 
   countAll(filter) {
     const where = getWhere(filter);
-    console.log(where);
     return this.model.count({ where });
   }
 }

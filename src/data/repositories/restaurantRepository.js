@@ -79,13 +79,7 @@ class RestaurantRepository extends BaseRepository {
       limit,
       offset
     } = filter;
-    console.log('8888888888888888888888888');
-    console.log(filter);
-    console.log('8888888888888888888888888');
     const where = getWhere(filter);
-    console.log('--------------------------');
-    console.log(where);
-    console.log('--------------------------');
 
     return this.model.findAll({
       where,

@@ -21,9 +21,9 @@ export default class BaseRepository {
     return this.model.create(data);
   }
 
-  async updateById(findObj, data) {
+  async updateById(id, data) {
     const [result] = await this.model.update(data, {
-      where: { ...findObj }
+      where: { id }
     });
     return result === 1;
   }

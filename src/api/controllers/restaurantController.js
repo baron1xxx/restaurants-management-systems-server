@@ -89,9 +89,14 @@ export const getById = async (req, res, next) => {
 
 export const updateRestaurant = async (req, res, next) => {
   try {
-    const { params: { id }, user: { id: userId }, body } = req;
+    const {
+      body,
+      file,
+      user,
+      params: { id }
+    } = req;
 
-    const restaurantUpdated = await restaurantService.update({ id, userId }, body);
+    const restaurantUpdated = await restaurantService.update(id, { ...body, file, user });
 
     res.status(200)
       .json({
@@ -105,9 +110,9 @@ export const updateRestaurant = async (req, res, next) => {
 
 export const removeRestaurant = async (req, res, next) => {
   try {
-    const { params: { id }, user: { id: userId } } = req;
+    const { params: { id }, user } = req;
 
-    const restaurantDeleted = await restaurantService.remove({ id, userId });
+    const restaurantDeleted = await restaurantService.update(id, { user, isDeleted: true });
 
     res.status(200)
       .json({

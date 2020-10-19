@@ -1,5 +1,5 @@
 import BaseRepository from './baseRepository';
-import { AuthTokenModel, UserModel } from '../models';
+import { AuthTokenModel, UserModel, RoleModel } from '../models';
 
 class AuthTokenRepository extends BaseRepository {
   getUserByAccessToken(accessToken) {
@@ -8,7 +8,10 @@ class AuthTokenRepository extends BaseRepository {
         accessToken
       },
       include: {
-        model: UserModel
+        model: UserModel,
+        include: {
+          model: RoleModel
+        }
       }
     });
   }

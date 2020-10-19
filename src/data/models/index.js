@@ -20,6 +20,8 @@ const Opening = orm.import('./opening');
 const Restaurant = orm.import('./restaurant');
 // Menu model
 const Menu = orm.import('./menu');
+// Dish model
+const Dish = orm.import('./dish');
 
 associate({
   User,
@@ -35,7 +37,8 @@ associate({
   Restaurant,
   Geolocation,
   Opening,
-  Menu
+  Menu,
+  Dish
 });
 
 export {
@@ -52,5 +55,6 @@ export {
   Restaurant as RestaurantModel,
   Geolocation as GeolocationModel,
   Opening as OpeningModel,
-  Menu as MenuModel
+  Menu as MenuModel,
+  Dish as DishModel
 };

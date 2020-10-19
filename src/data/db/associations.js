@@ -1,3 +1,4 @@
+
 export default models => {
   const {
     User,
@@ -12,7 +13,8 @@ export default models => {
     Address,
     Geolocation,
     Restaurant,
-    Opening
+    Opening,
+    Menu
   } = models;
 
   User.hasMany(AuthToken);
@@ -29,6 +31,7 @@ export default models => {
 
   Image.hasOne(User);
   Image.hasOne(Restaurant);
+  // Image.hasOne(Menu);
 
   Region.hasMany(City);
   Region.hasMany(Address);
@@ -52,8 +55,12 @@ export default models => {
   Restaurant.belongsTo(Geolocation);
   Restaurant.belongsTo(Image);
   Restaurant.hasMany(Opening);
+  Restaurant.hasMany(Menu);
 
   Geolocation.hasOne(Restaurant);
 
   Opening.belongsTo(Restaurant);
+
+  Menu.belongsTo(Restaurant);
+  Menu.belongsTo(Image);
 };

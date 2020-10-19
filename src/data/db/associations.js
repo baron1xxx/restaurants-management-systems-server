@@ -14,7 +14,8 @@ export default models => {
     Geolocation,
     Restaurant,
     Opening,
-    Menu
+    Menu,
+    Dish
   } = models;
 
   User.hasMany(AuthToken);
@@ -61,6 +62,10 @@ export default models => {
 
   Opening.belongsTo(Restaurant);
 
+  Menu.hasMany(Dish);
   Menu.belongsTo(Restaurant);
   Menu.belongsTo(Image);
+
+  Dish.belongsTo(Menu);
+  Dish.belongsTo(Image);
 };

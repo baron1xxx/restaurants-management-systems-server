@@ -29,9 +29,8 @@ const uploadToImgur = async file => {
 // eslint-disable-next-line no-unused-vars
 const deleteFromImgur = async deleteHash => {
   try {
-    const { data: { data } } = await axios.post(
+    const { data: { data } } = await axios.delete(
       `https://api.imgur.com/3/image/${deleteHash}`,
-      {},
       {
         headers: { Authorization: `Client-ID ${imgurId}` }
       }
@@ -42,17 +41,6 @@ const deleteFromImgur = async deleteHash => {
   } catch ({ response: { data: { status, data } } }) { // parse Imgur error
     return Promise.reject({ status, message: data.error });
   }
-};
-
-export const upload = async file => {
-  const image = await uploadToImgur(file);
-  return imageRepository.create(image);
-};
-
-export const update = async (id, deleteHash, file) => {
-  await deleteFromImgur(deleteHash);
-  const image = await uploadToImgur(file);
-  return imageRepository.updateById(id, image);
 };
 
 export const getById = async id => {
@@ -69,4 +57,16 @@ export const getById = async id => {
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Restaurant service getById()');
   }
+};
+
+export const upload = async file => {
+  const image = await uploadToImgur(file);
+  return imageRepository.create(image);
+};
+
+export const update = async (id, file) => {
+  const { deleteHash } = await getById(id);
+  await deleteFromImgur(deleteHash);
+  const image = await uploadToImgur(file);
+  return imageRepository.updateById(id, image);
 };

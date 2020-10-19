@@ -5,12 +5,12 @@ import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 
 export const create = async ({ menuId, file, ...dishData }) => {
   try {
+    // Check if menu exists
     await menuService.getById(menuId);
-
-    // TODO If file then upload file else imageId = null;
-    const { id: imageId } = file
+    // If file exist upload else return empty object and assign default value to imageId = null
+    const { id: imageId = null } = file
       ? await imageService.upload(file)
-      : { id: null };
+      : {};
 
     const { id } = await dishRepository.create({ ...dishData, imageId, menuId });// TODO { imageId }
     const dish = await dishRepository.getById(id);

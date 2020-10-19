@@ -12,5 +12,12 @@ export default (orm, DataTypes) => {
     updatedAt: DataTypes.DATE
   }, {});
 
+  // eslint-disable-next-line no-unused-vars
+  Image.afterBulkDestroy((item, options) => {
+    console.log('After delete IMAGE!!!!!!!!!!!!!!!!!', item);
+    console.log('After delete IMAGE!!!!!!!!!!!!!!!!!', options);
+  });
+
   return Image;
 };
+

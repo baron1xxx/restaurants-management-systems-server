@@ -16,3 +16,35 @@ export const create = async (req, res, next) => {
     next(new ErrorHandler(e.status, e.message, e.controller));
   }
 };
+
+export const getById = async (req, res, next) => {
+  try {
+    const { params: { id } } = req;
+
+    const dish = await dishService.getById(id);
+
+    res.status(200)
+      .json({
+        error: false,
+        data: dish
+      });
+  } catch (e) {
+    next(new ErrorHandler(e.status, e.message, e.controller));
+  }
+};
+
+export const getDishes = async (req, res, next) => {
+  try {
+    const { query, pagination, params: { menuId } } = req;
+
+    const dishes = await dishService.getDishes({ ...query, ...pagination, menuId });
+
+    res.status(200)
+      .json({
+        error: false,
+        data: dishes
+      });
+  } catch (e) {
+    next(new ErrorHandler(e.status, e.message, e.controller));
+  }
+};

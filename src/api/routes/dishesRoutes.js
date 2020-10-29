@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import jwtAccessTokenMiddleware from '../middlewares/authMiddlewares/jwtAccessTokenMiddleware';
 import createDishValidMiddleware from '../middlewares/dishMiddlewares/createDishValidMiddleware';
+import updateDishValidMiddleware from '../middlewares/dishMiddlewares/updateDishValidMiddleware';
 import dishExistsByNameByMenuIdMiddleware from '../middlewares/dishMiddlewares/dishExistsByNameByMenuIdMiddleware';
 import imageMiddleware from '../middlewares/imageMiddlewares/imageMiddleware';
 import paginationValidateMiddleware from '../middlewares/paginationValidateMiddleware';
@@ -18,6 +19,15 @@ router
     imageMiddleware,
     createDishValidMiddleware,
     dishExistsByNameByMenuIdMiddleware,
-    dishController.create);
+    dishController.create)
+  .put('/:id',
+    jwtAccessTokenMiddleware,
+    imageMiddleware,
+    updateDishValidMiddleware,
+    dishExistsByNameByMenuIdMiddleware,
+    dishController.updateDish)
+  .delete('/:id',
+    jwtAccessTokenMiddleware,
+    dishController.removeDish);
 
 export default router;

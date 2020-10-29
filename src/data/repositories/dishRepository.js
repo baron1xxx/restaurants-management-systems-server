@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import BaseRepository from './baseRepository';
-import { DishModel, ImageModel, MenuModel } from '../models/index';
+import { DishModel, ImageModel, MenuModel, RestaurantModel } from '../models/index';
 
 // eslint-disable-next-line no-unused-vars
 const { Op } = Sequelize;
@@ -8,7 +8,11 @@ const { Op } = Sequelize;
 const include = [
   {
     model: MenuModel,
-    attributes: ['id', 'restaurantId']
+    attributes: ['id', 'restaurantId'],
+    include: {
+      model: RestaurantModel,
+      attributes: ['id', 'userId']
+    }
   },
   {
     model: ImageModel,
@@ -42,7 +46,21 @@ class DishRepository extends BaseRepository {
     });
   }
 
-  // TODO name filter don't work
+  getAll(filter) {
+    const {
+      limit,
+      offset
+    } = filter;
+    const where = getWhere(filter);
+
+    return this.model.findAll({
+      where,
+      include,
+      limit,
+      offset
+    });
+  }
+
   countAll(filter) {
     const where = getWhere(filter);
     return this.model.count({ where });

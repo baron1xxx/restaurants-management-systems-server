@@ -4,6 +4,7 @@ import checkAddressMiddleware from '../middlewares/addressMiddlewares/checkAddre
 import restaurantValidateMiddleware from '../middlewares/restaurantMiddlewares/restaurantValidateMiddleware';
 import openingValidateMiddleware from '../middlewares/restaurantMiddlewares/openingValidateMiddleware';
 import checkRestaurantExistsMiddleware from '../middlewares/restaurantMiddlewares/checkRestaurantExistsMiddleware';
+import onlyRestaurantOwnerOrAdminMiddleware from '../middlewares/onlyRestaurantOwnerOrAdminMiddleware';
 import paginationValidateMiddleware from '../middlewares/paginationValidateMiddleware';
 import imageMiddleware from '../middlewares/imageMiddlewares/imageMiddleware';
 import * as restaurantController from '../controllers/restaurantController';
@@ -30,9 +31,11 @@ router
   .put('/:id',
     jwtAccessTokenMiddleware,
     imageMiddleware,
+    onlyRestaurantOwnerOrAdminMiddleware,
     restaurantController.updateRestaurant)
   .delete('/:id',
     jwtAccessTokenMiddleware,
+    onlyRestaurantOwnerOrAdminMiddleware,
     restaurantController.removeRestaurant);
 
 export default router;

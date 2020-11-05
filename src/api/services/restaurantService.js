@@ -10,6 +10,7 @@ import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 import { LIMIT, PAGE } from '../../constants/paginationConstants';
 import { restaurantErrorMessages } from '../../constants/customErrorMessage/restaurantErrorMessage';
 // import { restaurantSuccessMessage } from '../../constants/customSuccessMessage/restaurantSuccessMessage';
+// eslint-disable-next-line no-unused-vars
 import { BEAD_REQUEST, NOT_FOUND, UNAUTHORIZED } from '../../constants/responseStatusCodes';
 
 export const create = async (address, restaurantData, opening, file, userId) => {
@@ -89,13 +90,13 @@ export const update = async (id, data) => {
   try {
     const { file, user, ...restaurantBody } = data;
     const restaurant = await getById(id);
-    if (restaurant.userId !== user.id) {
-      throw new ErrorHandler(
-        UNAUTHORIZED,
-        restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
-        'Restaurant update() getById()'
-      );
-    }
+    // if (restaurant.userId !== user.id) {
+    //   throw new ErrorHandler(
+    //     UNAUTHORIZED,
+    //     restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
+    //     'Restaurant update() getById()'
+    //   );
+    // }
     // TODO перевыіряти на уныкальність імені при оновлені даних. Вдрух таке вже існує!!! Add Middleware!!!
     // TODO Може нанедо тої функції. Што складно читати!!!
     const restaurantUpdate = async (restaurantId, restaurantData) => {

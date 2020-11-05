@@ -9,6 +9,9 @@ export default async (req, res, next) => {
   try {
     const { body: { name, restaurantId } } = req;
     // Check if restaurant exists.
+    console.log('-----------------------------------');
+    console.log(restaurantId);
+    console.log('-----------------------------------');
     await restaurantService.getById(restaurantId);
     // TODO Якщо є імя то перевіряти на унікальність!!! if (name) {ПЕРЕВІРИТИ}
     const menuExists = name

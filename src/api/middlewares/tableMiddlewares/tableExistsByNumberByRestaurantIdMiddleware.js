@@ -11,7 +11,7 @@ export default async (req, res, next) => {
     const { body: { number, restaurantId } } = req;
 
     // Check if restaurant exists.
-    // await restaurantService.getById(restaurantId);
+    await restaurantService.getById(restaurantId);
 
     const tableExists = number
       ? await tableRepository.getOne({ number, restaurantId })

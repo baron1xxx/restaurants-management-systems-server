@@ -9,6 +9,9 @@ import { countPages, offset } from '../../helpers/paginationHelper';
 export const create = async data => {
   try {
     const { id } = await tableRepository.create(data);
+    console.log('*****************');
+    console.log(data);
+    console.log('*****************');
     return await tableRepository.getById(id);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Table service create()');

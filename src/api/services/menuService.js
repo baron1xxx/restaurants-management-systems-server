@@ -4,9 +4,8 @@ import menuRepository from '../../data/repositories/menuRepository';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 import { countPages, offset } from '../../helpers/paginationHelper';
 import { LIMIT, PAGE } from '../../constants/paginationConstants';
-import { NOT_FOUND, FORBIDDEN } from '../../constants/responseStatusCodes';
+import { NOT_FOUND } from '../../constants/responseStatusCodes';
 import { menuErrorMessages } from '../../constants/customErrorMessage/menuErrorMessage';
-import { roles } from '../../constants/roles';
 
 export const create = async ({ restaurantId, file, ...menuData }) => {
   try {
@@ -15,8 +14,7 @@ export const create = async ({ restaurantId, file, ...menuData }) => {
     const { id: imageId } = await imageService.upload(file);
 
     const { id } = await menuRepository.create({ ...menuData, imageId, restaurantId });
-    const menu = await menuRepository.getById(id);
-    return menu;
+    return await menuRepository.getById(id);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Menu service create()');
   }
@@ -62,13 +60,6 @@ export const update = async (id, data) => {
     const { file, user, ...menuBody } = data;
     const menu = await getById(id);
 
-    if (menu.restaurant.userId !== user.id && user.role.role !== roles.ADMIN) {
-      throw new ErrorHandler(
-        FORBIDDEN,
-        menuErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_MENU,
-        'Restaurant update() getById()'
-      );
-    }
     if (file) {
       await imageService.update(menu.image.id, file);
     }

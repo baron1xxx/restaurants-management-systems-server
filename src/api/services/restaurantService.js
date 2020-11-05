@@ -96,7 +96,7 @@ export const update = async (id, data) => {
         'Restaurant update() getById()'
       );
     }
-    // TODO перевыіряти на уныкальність імені при оновлені даних. Вдрух таке вже існує!!!
+    // TODO перевыіряти на уныкальність імені при оновлені даних. Вдрух таке вже існує!!! Add Middleware!!!
     // TODO Може нанедо тої функції. Што складно читати!!!
     const restaurantUpdate = async (restaurantId, restaurantData) => {
       const restaurantIsUpdated = await restaurantRepository.updateById(restaurantId, restaurantData);

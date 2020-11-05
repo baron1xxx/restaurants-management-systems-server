@@ -25,8 +25,7 @@ export const create = async ({ menuId, file, ...dishData }) => {
     const { id: imageId = null } = await imageService.upload(file);
 
     const { id } = await dishRepository.create({ ...dishData, imageId, menuId });// TODO { imageId }
-    const dish = await dishRepository.getById(id);
-    return dish;
+    return await dishRepository.getById(id);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Dish service create()');
   }

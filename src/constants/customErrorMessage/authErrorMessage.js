@@ -16,5 +16,6 @@ export const authErrorMessages = {
   NOT_VALID_ACTIVATE_TOKEN: 'Not valid activate link. Enter your email and I’m re-sending you email for activation.',
   AUTH_TOKENS_EXIST: 'You are logged in. Auth tokens exist',
   PASSWORDS_NOT_CHANGED: 'Password do not changed!',
-  PASSWORDS_NOT_MATCH: 'Password do not match!'
+  PASSWORDS_NOT_MATCH: 'Password do not match!',
+  UNAUTHORIZED: 'Unauthorized'
 };

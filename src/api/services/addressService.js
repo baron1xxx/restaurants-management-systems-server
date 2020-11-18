@@ -4,7 +4,7 @@ import cityRepository from '../../data/repositories/cityRepository';
 import streetRepository from '../../data/repositories/streetRepository';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 
-export const create = async data => {
+export const createAddress = async data => {
   try {
     return await addressRepository.create(data);
   } catch (e) {
@@ -12,7 +12,7 @@ export const create = async data => {
   }
 };
 
-export const getById = async id => {
+export const getAddressById = async id => {
   try {
     return await addressRepository.getById(id);
   } catch (e) {

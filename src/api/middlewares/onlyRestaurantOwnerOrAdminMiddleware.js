@@ -3,26 +3,29 @@ import * as menuService from '../services/menuService';
 import * as dishService from '../services/dishService';
 import * as restaurantService from '../services/restaurantService';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
-import { UNAUTHORIZED } from '../../constants/responseStatusCodes';
+import { FORBIDDEN } from '../../constants/responseStatusCodes';
 import { authErrorMessages } from '../../constants/customErrorMessage/authErrorMessage';
 import { roles } from '../../constants/roles';
 
 // eslint-disable-next-line consistent-return
 export default async (req, res, next) => {
   try {
+    // TODO Ьоже це все переписати на кожну модель окремо (для table своя первірка, для menu своя і т.д.)
     const {
-      params: { tableId, menuId, dishId, id },
-      body: { restaurantId },
+      params: { tableId, menuId, dishId, id }, // id - it is restaurant id from params. When UPDATE or DELETE
+      body: { restaurantId }, // When CREATE OR UPDATE. Тобто в якому ресторані створюється або оновлюється модель.
       user } = req;
-
-    console.log('******************************');
-    console.log('restaurantId - ', restaurantId);
-    console.log('id - ', id);
-    console.log('menuId - ', menuId);
-    console.log('tableId - ', tableId);
-    console.log('dishId - ', dishId);
-    console.log(user.dataValues);
-    console.log('******************************');
+    if (restaurantId || id) {
+      // Check if restaurant exists.
+      const restaurant = await restaurantService.getRestaurantById(restaurantId || id);
+      return restaurant.userId === user.id || user.role.role === roles.ADMIN
+        ? next()
+        : next(new ErrorHandler(
+          FORBIDDEN,
+          authErrorMessages.FORBIDDEN,
+          'Only OWNER or ADMIN middleware'
+        ));
+    }
 
     if (tableId) {
       // Check if table exists.
@@ -31,24 +34,22 @@ export default async (req, res, next) => {
       return table.restaurant.userId === user.id || user.role.role === roles.ADMIN
         ? next()
         : next(new ErrorHandler(
-          UNAUTHORIZED,
-          authErrorMessages.UNAUTHORIZED,
+          FORBIDDEN,
+          authErrorMessages.FORBIDDEN,
           'Only OWNER or ADMIN middleware'
         ));
     }
 
     if (menuId) {
-      // Check if table exists.
+      // Check if menu exists.
       const menu = await menuService.getById(menuId);
-      console.log('/////////////////////');
-      console.log(menu);
-      console.log('/////////////////////');
       // Check if authentication user is owner restaurant.
+      req.restaurantId = menu.restaurant.id;
       return menu.restaurant.userId === user.id || user.role.role === roles.ADMIN
         ? next()
         : next(new ErrorHandler(
-          UNAUTHORIZED,
-          authErrorMessages.UNAUTHORIZED,
+          FORBIDDEN,
+          authErrorMessages.FORBIDDEN,
           'Only OWNER or ADMIN middleware'
         ));
     }
@@ -60,19 +61,8 @@ export default async (req, res, next) => {
       return dish.menu.restaurant.userId === user.id || user.role.role === roles.ADMIN
         ? next()
         : next(new ErrorHandler(
-          UNAUTHORIZED,
-          authErrorMessages.UNAUTHORIZED,
-          'Only OWNER or ADMIN middleware'
-        ));
-    }
-
-    if (id || restaurantId) {
-      const restaurant = await restaurantService.getById(id || restaurantId);
-      return restaurant.userId === user.id || user.role.role === roles.ADMIN
-        ? next()
-        : next(new ErrorHandler(
-          UNAUTHORIZED,
-          authErrorMessages.UNAUTHORIZED,
+          FORBIDDEN,
+          authErrorMessages.FORBIDDEN,
           'Only OWNER or ADMIN middleware'
         ));
     }

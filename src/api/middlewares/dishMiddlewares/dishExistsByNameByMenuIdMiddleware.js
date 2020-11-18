@@ -10,7 +10,7 @@ export default async (req, res, next) => {
     const { body: { name, menuId } } = req;
     // Check if menu exists.
     await menuService.getById(menuId);
-    // TODO Якщо є імя то перевіряти на унікальність!!! if (name) {ПЕРЕВІРИТИ}
+
     const dishExists = name
       ? await dishRepository.getOne({ name, menuId })
       : null;

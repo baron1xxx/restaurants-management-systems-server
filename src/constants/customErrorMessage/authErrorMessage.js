@@ -17,5 +17,6 @@ export const authErrorMessages = {
   AUTH_TOKENS_EXIST: 'You are logged in. Auth tokens exist',
   PASSWORDS_NOT_CHANGED: 'Password do not changed!',
   PASSWORDS_NOT_MATCH: 'Password do not match!',
-  UNAUTHORIZED: 'Unauthorized'
+  UNAUTHORIZED: 'Unauthorized',
+  FORBIDDEN: 'Forbidden'
 };

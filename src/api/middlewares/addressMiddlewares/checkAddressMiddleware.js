@@ -18,17 +18,14 @@ export default async (req, res, next) => {
     // Check Region
     const region = await regionRepository.getById(regionId);
     if (!region) {
-      next(new ErrorHandler(
+      return next(new ErrorHandler(
         NOT_FOUND,
         addressErrorMessages.REGION_NOT_EXISTS,
         addressControllerName.CHECK_ADDRESS_MIDDLEWARE
       ));
     }
     // Check City by regionId
-    const city = await cityRepository.getOne(
-      { id: cityId,
-        regionId }
-    );
+    const city = await cityRepository.getOne({ id: cityId, regionId });
     if (!city) {
       return next(new ErrorHandler(
         NOT_FOUND,
@@ -47,8 +44,8 @@ export default async (req, res, next) => {
     }
 
     // Check HouseNumber by streetId
-    const [createdHouseNumber, created] = await houseNumberRepository.findOrCreate(houseNumber, streetId);
-    if (!created) {
+    const houseNumberExists = await houseNumberRepository.getOne({ number: houseNumber, streetId });
+    if (houseNumberExists) {
       return next(new ErrorHandler(
         BEAD_REQUEST,
         addressErrorMessages.ADDRESS_EXISTS,
@@ -60,7 +57,7 @@ export default async (req, res, next) => {
       regionId,
       cityId,
       streetId,
-      houseNumberId: createdHouseNumber.id };
+      houseNumberId: houseNumber };
     next();
   } catch (e) {
     next(new ErrorHandler(e.status, e.message, e.controller));

@@ -9,9 +9,6 @@ import { countPages, offset } from '../../helpers/paginationHelper';
 export const create = async data => {
   try {
     const { id } = await tableRepository.create(data);
-    console.log('*****************');
-    console.log(data);
-    console.log('*****************');
     return await tableRepository.getById(id);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Table service create()');
@@ -38,7 +35,7 @@ export const getTables = async filter => {
   try {
     const { limit = LIMIT, page = PAGE, restaurantId } = filter;
     // Check if menu exist
-    await restaurantService.getById(restaurantId);
+    await restaurantService.getRestaurantById(restaurantId);
     // Count dishes by menu id
     const tableCount = await tableRepository.countAll(filter);
 

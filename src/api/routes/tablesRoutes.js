@@ -13,7 +13,7 @@ import { roles } from '../../constants/roles';
 const router = Router();
 
 router
-  .get('/:id',
+  .get('/:tableId',
     jwtAccessTokenMiddleware,
     tableController.getById)
   .get('/byRestaurant/:restaurantId',
@@ -22,7 +22,7 @@ router
   .post('/',
     jwtAccessTokenMiddleware,
     roleAuthorizationMiddleware([roles.ADMIN, roles.OWNER]),
-    // onlyOwnerOrAdminMiddleware,
+    onlyOwnerOrAdminMiddleware,
     createTableValidMiddleware,
     tableExistsByNumberByRestaurantIdMiddleware,
     tableController.create)

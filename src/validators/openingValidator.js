@@ -1,7 +1,6 @@
 import Joi from '@hapi/joi';
 import { daysOfWeek } from '../constants/daysOfWeek';
 import { regExpExpressions } from '../constants/regExpExpressions';
-// import { ErrorHandler } from '../helpers/error/ErrorHandler';
 
 const { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY } = daysOfWeek;
 
@@ -23,7 +22,7 @@ export const openingCreateValidator = Joi.array().items(
       .string()
       .trim()
       .required()
-      .valid(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+      .valid(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) // TODO Дні не повинні повторюватись!!!
       .messages({
         'string.base': 'Day must be string',
         'string.required': 'Day is required'
@@ -49,7 +48,6 @@ export const openingCreateValidator = Joi.array().items(
         'string.base': 'End time must be string',
         'string.required': 'End time is required',
         'string.pattern.base': 'End time does not match pattern.'
-        // 'any.invalid': 'Minute start mast be between 00-23'
       })
   })
 );

@@ -14,6 +14,8 @@ export default (req, res, next) => {
         'paginationValidateMiddleware'
       ));
     }
+
+    // TODO Чи потрібно в req обєкт пагінації, може тільки валідувати???!!!
     req.pagination = value;
     next();
   } catch (e) {

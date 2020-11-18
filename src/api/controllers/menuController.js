@@ -35,9 +35,9 @@ export const getMenus = async (req, res, next) => {
 
 export const getMenuById = async (req, res, next) => {
   try {
-    const { params: { id } } = req;
+    const { params: { menuId } } = req;
 
-    const menu = await menuService.getById(id);
+    const menu = await menuService.getById(menuId);
 
     res.status(200)
       .json({
@@ -54,11 +54,10 @@ export const updateMenu = async (req, res, next) => {
     const {
       body,
       file,
-      user,
-      params: { id }
+      params: { menuId }
     } = req;
 
-    const menuUpdated = await menuService.update(id, { ...body, file, user });
+    const menuUpdated = await menuService.update(menuId, { ...body, file });
 
     res.status(200)
       .json({
@@ -72,9 +71,9 @@ export const updateMenu = async (req, res, next) => {
 
 export const removeMenu = async (req, res, next) => {
   try {
-    const { params: { id }, user } = req;
+    const { params: { menuId }, user } = req;
 
-    const menuDeleted = await menuService.update(id, { user, isDeleted: true });
+    const menuDeleted = await menuService.update(menuId, { user, isDeleted: true });
 
     res.status(200)
       .json({

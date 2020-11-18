@@ -37,10 +37,10 @@ export const menuUpdateValidator = Joi.object({
       'string.min': 'Menu name minimum {#limit} symbol ',
       'string.max': 'Menu name maximum {#limit} symbol ',
       'string.pattern.base': 'Menu name does not match pattern.'
-    }),
-  restaurantId: Joi
-    .number()
-    .required()
-    .integer()
-    .positive()
+    })
+  // restaurantId: Joi
+  //   .number()
+  //   .required()
+  //   .integer()
+  //   .positive()
 });

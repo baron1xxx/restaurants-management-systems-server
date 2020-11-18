@@ -55,7 +55,7 @@ export const getById = async id => {
     }
     return image;
   } catch (e) {
-    throw new ErrorHandler(e.status, e.message, 'Restaurant service getById()');
+    throw new ErrorHandler(e.status, e.message, 'Image service getById()');
   }
 };
 
@@ -64,9 +64,12 @@ export const upload = async file => {
   return imageRepository.create(image);
 };
 
-export const update = async (id, file) => {
-  const { deleteHash } = await getById(id);
+export const update = async (imageId, file) => {
+  const { deleteHash } = await getById(imageId);
+  // Видалить попередню картинку з IMGUR.
   await deleteFromImgur(deleteHash);
+  // Загрузить нову.
   const image = await uploadToImgur(file);
-  return imageRepository.updateById(id, image);
+  // І обновить запис в базі.
+  return imageRepository.updateById(imageId, image);
 };

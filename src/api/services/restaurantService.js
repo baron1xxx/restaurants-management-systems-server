@@ -9,15 +9,28 @@ import { countPages, offset } from '../../helpers/paginationHelper';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
 import { LIMIT, PAGE } from '../../constants/paginationConstants';
 import { restaurantErrorMessages } from '../../constants/customErrorMessage/restaurantErrorMessage';
-// import { restaurantSuccessMessage } from '../../constants/customSuccessMessage/restaurantSuccessMessage';
-// eslint-disable-next-line no-unused-vars
-import { BEAD_REQUEST, NOT_FOUND, UNAUTHORIZED } from '../../constants/responseStatusCodes';
+import { BEAD_REQUEST, NOT_FOUND } from '../../constants/responseStatusCodes';
+import { imageErrorMessages } from '../../constants/customErrorMessage/imageErrorMessage';
 
-export const create = async (address, restaurantData, opening, file, userId) => {
+export const createRestaurant = async (address, opening, file, userId, restaurantData) => {
   try {
-    const { id } = await addressService.create(address);
-    const createdAddress = await addressService.getById(id);
-
+    // Check if file exists
+    if (!file) {
+      throw new ErrorHandler(
+        NOT_FOUND,
+        imageErrorMessages.IMAGE_IS_REQUIRED,
+        'Restaurant create()'
+      );
+    }
+    const { id: addressId } = await addressService.createAddress(address);
+    // Include address models (Region, City, Street, HouseNumber)
+    const createdAddress = await addressService.getAddressById(addressId);
+    // TODO Можливо краще по вибраному адресу отримувати координати на клієтні...?
+    /*
+    Для отримання кординат використовувати сервер (запит по адресу) чи робити це на клієнті (Google maps client api)???
+    На клієнті зробити можливість зміни маркера кординат (як в таксі) і відправляти на сервер вже готові координати і
+    не шукати їх на сервері, а при створені ресторана одразу зберігати в базу ті (координати),що прийшли з клієнта.
+     */
     const {
       lat: latitude,
       lng: longitude
@@ -30,23 +43,28 @@ export const create = async (address, restaurantData, opening, file, userId) => 
 
     const { id: imageId } = await imageService.upload(file);
 
+    // TODO Чи є можливість у sequelize відкотити (видалити) створені моделі які асоціюються з основною??? -
+    // TODO - при створенні основної моделі виникла помилка і модель не було створено???
+    /*
+    Тобто щось таке як міграції. Якщо помилка то видалити.
+    Для ресторана потрібні АДРЕС, ГЕОЛОКАЦІЯ, ФОТО, ГОДИНИ ВІДКРИТТЯ. Створити опочатку і моделі а потім РЕСТОРАН.
+    Чи навпаки. Спочатку РЕСТОРАН, потім ці моделі і тоді обновляти ресторан під ці моделі???
+     */
+
     const { id: restaurantId } = await restaurantRepository.create({
       ...restaurantData,
       userId,
+      addressId,
       geolocationId,
-      imageId,
-      addressId: createdAddress.id
+      imageId
     });
 
     await openingService.create(opening, restaurantId);
-
-    return restaurantRepository.getById(restaurantId);
+    // TODO Можливо створювати з isDeleted = true, щоб не зразу зявлявся для користувачів (а коли буде наповнено).
+    // Типу активувати ресторан бо він вже має МЕНЮ, СТРАВИ БЛА-БЛА-БЛА...!
+    return await restaurantRepository.getById(restaurantId);
   } catch (e) {
-    throw new ErrorHandler(
-      e.status,
-      e.message,
-      'Restaurant service create()'
-    );
+    throw new ErrorHandler(e.status, e.message, 'Restaurant service create()');
   }
 };
 
@@ -56,10 +74,13 @@ export const getRestaurants = async filter => {
     const restaurantsCount = await restaurantRepository.countAll(filter);
 
     return {
-      restaurants: await restaurantRepository.getAll({
-        ...filter,
-        offset: offset(page, limit) }),
-      totalPage: countPages(restaurantsCount, limit)
+      restaurants: await restaurantRepository.getAll(
+        {
+          ...filter,
+          limit,
+          offset: offset(page, limit) }
+      ),
+      totalPage: countPages(restaurantsCount, limit, page)
     };
   } catch (e) {
     throw new ErrorHandler(
@@ -70,7 +91,7 @@ export const getRestaurants = async filter => {
   }
 };
 
-export const getById = async id => {
+export const getRestaurantById = async id => {
   try {
     const restaurant = await restaurantRepository.getById(id);
     if (!restaurant) {
@@ -86,64 +107,41 @@ export const getById = async id => {
   }
 };
 
-export const update = async (id, data) => {
+export const update = async (restaurantId, data) => {
   try {
-    const { file, user, ...restaurantBody } = data;
-    const restaurant = await getById(id);
-    // if (restaurant.userId !== user.id) {
-    //   throw new ErrorHandler(
-    //     UNAUTHORIZED,
-    //     restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
-    //     'Restaurant update() getById()'
-    //   );
-    // }
-    // TODO перевыіряти на уныкальність імені при оновлені даних. Вдрух таке вже існує!!! Add Middleware!!!
-    // TODO Може нанедо тої функції. Што складно читати!!!
-    const restaurantUpdate = async (restaurantId, restaurantData) => {
-      const restaurantIsUpdated = await restaurantRepository.updateById(restaurantId, restaurantData);
-      if (!restaurantIsUpdated) {
-        throw new ErrorHandler(
-          BEAD_REQUEST,
-          restaurantErrorMessages.RESTAURANT_NOT_UPDATED,
-          'Restaurant updateById()'
-        );
-      }
-      // eslint-disable-next-line no-return-await
-      return await getById(restaurantId);
-    };
+    const { file, ...restaurantData } = data;
+    // Лишній раз роблю запит на меню по ID
+    // Перший раз це в міддлеварі, щоб перевірити чи той хто оновлює дані а власником або адміном
+    const restaurant = await getRestaurantById(restaurantId);
+    // А тут щоб дістати imageId, для оновлення картинки і видалення попередньої
+    // Щоб знайти image по imageId і за допомогою deleteHash видалити image з Imgur.
+    // TODO Чи в onlyRestaurantOwnerOrAdminMiddleware засетати ресторан в запит req.restaurant = restaurant...???
+    // Але це підійде тільки для оновлення ресторана, а якщо створюється стіл чи меню (нема id але є restaurantId)
+    // в запит засетається зайвий обєкт ресторана.
+    // Може тоді тільки req.imageId = restaurant.image.id ...???
+    // Або якась інша реалізація з фотками...??? ...!!!
 
     if (file) {
-      const { id: imageId, deleteHash } = await imageService.getById(restaurant.image.id);
-      await imageService.update(imageId, deleteHash, file);
-      return await getById(id);
+      await imageService.update(restaurant.image.id, file);
+      // TODO  А при видаленні файла нема і тому не видалить файл з IMGUR.
+      // Зробити це в моделі
+      // Image.afterDestroy(item => {
+      //  Get delete hash image and delete image from IMGUR!!!
+      //   });
     }
 
-    return await restaurantUpdate(id, restaurantBody);
+    const restaurantIsUpdated = await restaurantRepository.updateById(restaurantId, restaurantData);
+    // TODO Чи потрібно під час CREATE, UPDATE, DELETE перевіряти чи операція пройшла успішно?
+    if (!restaurantIsUpdated) {
+      throw new ErrorHandler(
+        BEAD_REQUEST,
+        restaurantErrorMessages.RESTAURANT_NOT_UPDATED,
+        'Restaurant updateById()'
+      );
+    }
+
+    return await getRestaurantById(restaurantId);
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Restaurant service update()');
   }
 };
-
-// export const remove = async (id, user) => {
-//   try {
-//     const restaurant = await getById(id);
-//     if (restaurant.userId !== user.id) {
-//       throw new ErrorHandler(
-//         UNAUTHORIZED,
-//         restaurantErrorMessages.OWNER_OR_ADMIN_CAN_UPDATE_RESTAURANT,
-//         'Restaurant remove() getById()'
-//       );
-//     }
-//     const restaurantDeleted = await restaurantRepository.updateById(find, { isDeleted: true });
-//     if (!restaurantDeleted) {
-//       throw new ErrorHandler(
-//         NOT_FOUND,
-//         restaurantErrorMessages.RESTAURANT_NOT_FOUND,
-//         'Restaurant delete()'
-//       );
-//     }
-//     return restaurantSuccessMessage.RESTAURANT_SUCCESS_DELETED;
-//   } catch (e) {
-//     throw new ErrorHandler(e.status, e.message, e.controller);
-//   }
-// };

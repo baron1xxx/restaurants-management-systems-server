@@ -11,7 +11,7 @@ export const create = async (req, res, next) => {
       user: { id: userId }
     } = req;
 
-    const restaurant = await restaurantService.create(address, restaurantData, opening, file, userId);
+    const restaurant = await restaurantService.createRestaurant(address, opening, file, userId, restaurantData);
 
     res.status(200)
       .json({
@@ -75,7 +75,7 @@ export const getById = async (req, res, next) => {
   try {
     const { params: { id } } = req;
 
-    const restaurant = await restaurantService.getById(id);
+    const restaurant = await restaurantService.getRestaurantById(id);
 
     res.status(200)
       .json({
@@ -90,18 +90,17 @@ export const getById = async (req, res, next) => {
 export const updateRestaurant = async (req, res, next) => {
   try {
     const {
-      body,
+      restaurant,
       file,
-      user,
       params: { id }
     } = req;
 
-    const restaurantUpdated = await restaurantService.update(id, { ...body, file, user });
+    const restaurantUpdated = await restaurantService.update(id, { ...restaurant, file });
 
     res.status(200)
       .json({
         error: false,
-        data: restaurantUpdated
+        data: restaurantUpdated // TODO Чи так {data: await restaurantService.update(id, { ...body, file, user });}
       });
   } catch (e) {
     next(new ErrorHandler(e.status, e.message, e.controller));
@@ -110,9 +109,9 @@ export const updateRestaurant = async (req, res, next) => {
 
 export const removeRestaurant = async (req, res, next) => {
   try {
-    const { params: { id }, user } = req;
+    const { params: { id } } = req;
 
-    const restaurantDeleted = await restaurantService.update(id, { user, isDeleted: true });
+    const restaurantDeleted = await restaurantService.update(id, { isDeleted: true });
 
     res.status(200)
       .json({

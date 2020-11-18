@@ -14,30 +14,34 @@ import { roles } from '../../constants/roles';
 const router = Router();
 
 router
-  .get('/:id', menuController.getMenuById)
-  .get('/byRestaurant/:restaurantId',
+  .get(
+    '/byRestaurant/:restaurantId',
     paginationValidateMiddleware,
-    menuController.getMenus)
+    menuController.getMenus
+  )
   .post('/',
     jwtAccessTokenMiddleware,
-    imageMiddleware,
     roleAuthorizationMiddleware([roles.ADMIN, roles.OWNER]),
-    onlyRestaurantOwnerOrAdminMiddleware,
+    imageMiddleware,
     createMenuValidMiddleware,
+    onlyRestaurantOwnerOrAdminMiddleware,
     menuExistsByNameByRestaurantIdMiddleware,
     menuController.create)
-  .put('/:menuId',
+  .route('/:menuId')
+  .get(menuController.getMenuById)
+  .all(
     jwtAccessTokenMiddleware,
-    imageMiddleware,
     roleAuthorizationMiddleware([roles.ADMIN, roles.OWNER]),
-    onlyRestaurantOwnerOrAdminMiddleware,
+    imageMiddleware,
+    onlyRestaurantOwnerOrAdminMiddleware
+  )
+  .put(
     updateMenuValidMiddleware,
     menuExistsByNameByRestaurantIdMiddleware,
-    menuController.updateMenu)
-  .delete('/:menuId',
-    jwtAccessTokenMiddleware,
-    roleAuthorizationMiddleware([roles.ADMIN, roles.OWNER]),
-    onlyRestaurantOwnerOrAdminMiddleware,
-    menuController.removeMenu);
+    menuController.updateMenu
+  )
+  .delete(
+    menuController.removeMenu
+  );
 
 export default router;

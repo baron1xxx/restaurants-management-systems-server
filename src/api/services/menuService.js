@@ -6,10 +6,17 @@ import { countPages, offset } from '../../helpers/paginationHelper';
 import { LIMIT, PAGE } from '../../constants/paginationConstants';
 import { NOT_FOUND } from '../../constants/responseStatusCodes';
 import { menuErrorMessages } from '../../constants/customErrorMessage/menuErrorMessage';
+import { imageErrorMessages } from '../../constants/customErrorMessage/imageErrorMessage';
 
 export const create = async ({ restaurantId, file, ...menuData }) => {
   try {
-    await restaurantService.getById(restaurantId);
+    if (!file) {
+      throw new ErrorHandler(
+        NOT_FOUND,
+        imageErrorMessages.IMAGE_IS_REQUIRED,
+        'Menu create()'
+      );
+    }
 
     const { id: imageId } = await imageService.upload(file);
 
@@ -24,16 +31,21 @@ export const getMenus = async filter => {
   try {
     const { limit = LIMIT, page = PAGE, restaurantId } = filter;
     // Check if restaurant exist
-    await restaurantService.getById(restaurantId);
+    await restaurantService.getRestaurantById(restaurantId);
     // Count menus by restaurant id
     const menusCount = await menuRepository.countAll(filter);
 
-    return {
-      menus: await menuRepository.getAll({
-        ...filter,
-        offset: offset(page, limit) }),
-      totalPage: countPages(menusCount, limit)
-    };
+    return menusCount
+      ? {
+        menus: await menuRepository.getAll(
+          {
+            ...filter,
+            limit,
+            offset: offset(page, limit) }
+        ),
+        totalPage: countPages(menusCount, limit, page)
+      }
+      : [];
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Menu service geAll()');
   }
@@ -57,13 +69,15 @@ export const getById = async id => {
 
 export const update = async (id, data) => {
   try {
-    const { file, user, ...menuBody } = data;
+    const { file, ...menuBody } = data;
+    // TODO те саме що і вресторані. Лишній раз роблю запит на меню по ID
+    // Перший раз це в міддлеварі, щоб перевірити чи той хто оновлює дані а власником або адміном
+    // А тут щоб дістати imageId, для оновлення картинки і видалення попередньої
     const menu = await getById(id);
 
     if (file) {
       await imageService.update(menu.image.id, file);
     }
-
     await menuRepository.updateById(id, menuBody);
     return await menuRepository.getById(id);
   } catch (e) {

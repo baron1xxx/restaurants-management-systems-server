@@ -17,9 +17,9 @@ export const create = async (req, res, next) => {
 
 export const getById = async (req, res, next) => {
   try {
-    const { params: { id } } = req;
+    const { params: { tableId } } = req;
 
-    const table = await tableService.getById(id);
+    const table = await tableService.getById(tableId);
 
     res.status(200)
       .json({

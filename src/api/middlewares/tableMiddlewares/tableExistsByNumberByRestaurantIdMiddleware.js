@@ -11,19 +11,19 @@ export default async (req, res, next) => {
     const { body: { number, restaurantId } } = req;
 
     // Check if restaurant exists.
-    await restaurantService.getById(restaurantId);
+    await restaurantService.getRestaurantById(restaurantId);
 
     const tableExists = number
       ? await tableRepository.getOne({ number, restaurantId })
       : null;
 
-    return !tableExists
-      ? next()
-      : next(new ErrorHandler(
+    return tableExists
+      ? next(new ErrorHandler(
         BEAD_REQUEST,
         tableErrorMessages.TABLE_EXISTS,
         'Check if table exists by name middleware'
-      ));
+      ))
+      : next();
   } catch (e) {
     next(new ErrorHandler(e.status, e.message, e.controller));
   }

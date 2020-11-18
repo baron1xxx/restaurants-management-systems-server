@@ -6,8 +6,9 @@ import authTokenRepository from '../../../data/repositories/authTokenRepository'
 
 export default async (req, res, next) => {
   try {
+    // TODO use extractAuthJwtToken from tokenHelper
     const bearerAccessToken = req.get('Authorization');
-
+    // TODO change Error exception (return next new ErrorHandler ())
     if (!bearerAccessToken) {
       next({
         status: FORBIDDEN,
@@ -29,6 +30,7 @@ export default async (req, res, next) => {
     req.user = authTokens.user;
     next();
   } catch (e) {
+    // TODO change Error exception (next new ErrorHandler (e.status, e.message, e.controller))
     next({ status: e.status, message: e.message, controller: e.controller });
   }
 };

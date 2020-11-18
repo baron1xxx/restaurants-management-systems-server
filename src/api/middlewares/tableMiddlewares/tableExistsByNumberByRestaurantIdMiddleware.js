@@ -8,10 +8,7 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 // eslint-disable-next-line consistent-return
 export default async (req, res, next) => {
   try {
-    const { body: { number, restaurantId } } = req;
-
-    // Check if restaurant exists.
-    await restaurantService.getRestaurantById(restaurantId);
+    const { body: { number }, restaurantId } = req;
 
     const tableExists = number
       ? await tableRepository.getOne({ number, restaurantId })

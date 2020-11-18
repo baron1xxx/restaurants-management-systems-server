@@ -49,9 +49,9 @@ export const getTables = async (req, res, next) => {
 
 export const updateTable = async (req, res, next) => {
   try {
-    const { body, params: { id } } = req;
+    const { body, params: { tableId } } = req;
 
-    const tableUpdated = await tableService.update(id, body);
+    const tableUpdated = await tableService.update(tableId, body);
 
     res.status(200)
       .json({
@@ -65,9 +65,9 @@ export const updateTable = async (req, res, next) => {
 
 export const removeTable = async (req, res, next) => {
   try {
-    const { params: { id } } = req;
+    const { params: { tableId } } = req;
 
-    const tableDeleted = await tableService.update(id, { isDeleted: true });
+    const tableDeleted = await tableService.update(tableId, { isDeleted: true });
 
     res.status(200)
       .json({

@@ -1,8 +1,15 @@
 import Sequelize from 'sequelize';
 import BaseRepository from './baseRepository';
-import { TableModel } from '../models';
+import { RestaurantModel, TableModel } from '../models';
 
 const { Op } = Sequelize;
+
+const include = [
+  {
+    model: RestaurantModel,
+    attributes: ['id', 'userId']
+  }
+];
 
 const getWhere = filter => {
   const {
@@ -24,6 +31,12 @@ const getWhere = filter => {
 };
 
 class TableRepository extends BaseRepository {
+  getById(id) {
+    return this.model.findByPk(id, {
+      include
+    });
+  }
+
   getAll(filter) {
     const {
       limit,

@@ -26,5 +26,7 @@ export default [
   // Menu routers
   /^\/menus$/i, // '/menus',
   /^\/menus\/((?:[^/]+?))$/i, // /menus/:id
-  /^\/menus\/byRestaurant\/((?:[^/]+?))$/i // '/menus/byRestaurant/:restaurantId'
+  /^\/menus\/byRestaurant\/((?:[^/]+?))$/i, // '/menus/byRestaurant/:restaurantId'
+  // Table router
+  /^\/tables\/byRestaurant\/((?:[^/]+?))$/i
 ];

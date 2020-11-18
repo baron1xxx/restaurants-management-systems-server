@@ -31,6 +31,7 @@ export default async (req, res, next) => {
       // Check if table exists.
       const table = await tableService.getById(tableId);
       // Check if authentication user is owner restaurant.
+      req.restaurantId = table.restaurantId;
       return table.restaurant.userId === user.id || user.role.role === roles.ADMIN
         ? next()
         : next(new ErrorHandler(
@@ -68,6 +69,6 @@ export default async (req, res, next) => {
     }
     next();
   } catch (e) {
-    next(new ErrorHandler(e.status, e.message, e.controller));
+    next(new ErrorHandler(e.status, e.message, e.controller || 'Only oener or admin!!!'));
   }
 };

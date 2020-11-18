@@ -39,12 +39,17 @@ export const getTables = async filter => {
     // Count dishes by menu id
     const tableCount = await tableRepository.countAll(filter);
 
-    return {
-      tables: await tableRepository.getAll({
-        ...filter,
-        offset: offset(page, limit) }),
-      totalPage: countPages(tableCount, limit, page)
-    };
+    return tableCount
+      ? {
+        tables: await tableRepository.getAll(
+          {
+            ...filter,
+            limit,
+            offset: offset(page, limit) }
+        ),
+        totalPage: countPages(tableCount, limit, page)
+      }
+      : [];
   } catch (e) {
     throw new ErrorHandler(e.status, e.message, 'Table service geAll()');
   }

@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import * as restaurantService from '../../services/restaurantService';
 import tableRepository from '../../../data/repositories/tableRepository';
 import { ErrorHandler } from '../../../helpers/error/ErrorHandler';
 import { tableErrorMessages } from '../../../constants/customErrorMessage/tableErrorMessage';
@@ -8,10 +6,10 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 // eslint-disable-next-line consistent-return
 export default async (req, res, next) => {
   try {
-    const { body: { number }, restaurantId } = req;
+    const { body: { number, restaurantId } } = req;
 
     const tableExists = number
-      ? await tableRepository.getOne({ number, restaurantId })
+      ? await tableRepository.getOne({ number, restaurantId: restaurantId || req.restaurantId })
       : null;
 
     return tableExists

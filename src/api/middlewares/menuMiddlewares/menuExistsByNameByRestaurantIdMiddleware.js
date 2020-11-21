@@ -7,10 +7,10 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 export default async (req, res, next) => {
   try {
     // TODO По імені потрібно шукати в конкретному ресторані, а тому потрібен ресторанІД
-    const { body: { name }, restaurantId } = req;
+    const { body: { name, restaurantId } } = req;
 
     const menuExists = name
-      ? await menuRepository.getOne({ name, restaurantId })
+      ? await menuRepository.getOne({ name, restaurantId: restaurantId || req.restaurantId })
       : null;
 
     return !menuExists

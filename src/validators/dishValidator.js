@@ -26,11 +26,11 @@ export const dishCreateValidator = Joi.object({
     .max(200)
     .regex(RegExp(NAME))
     .messages({
-      'string.base': 'Dish name must be string',
-      'string.required': 'Dish name is required',
-      'string.min': 'Dish name minimum {#limit} symbol ',
-      'string.max': 'Dish name maximum {#limit} symbol ',
-      'string.pattern.base': 'Dish name does not match pattern.'
+      'string.base': 'Dish description must be string',
+      'string.required': 'Dish description is required',
+      'string.min': 'Dish description minimum {#limit} symbol ',
+      'string.max': 'Dish description maximum {#limit} symbol ',
+      'string.pattern.base': 'Dish description does not match pattern.'
     }),
   price: Joi
     .number()
@@ -71,10 +71,5 @@ export const dishUpdateValidator = Joi.object({
     }),
   price: Joi
     .number()
-    .positive(),
-  menuId: Joi
-    .number()
-    .required()
-    .integer()
     .positive()
 });

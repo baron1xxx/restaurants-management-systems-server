@@ -1,4 +1,3 @@
-import * as menuService from '../../services/menuService';
 import dishRepository from '../../../data/repositories/dishRepository';
 import { ErrorHandler } from '../../../helpers/error/ErrorHandler';
 import { dishErrorMessages } from '../../../constants/customErrorMessage/dishErrorMessage';
@@ -8,11 +7,9 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 export default async (req, res, next) => {
   try {
     const { body: { name, menuId } } = req;
-    // Check if menu exists.
-    await menuService.getById(menuId);
 
     const dishExists = name
-      ? await dishRepository.getOne({ name, menuId })
+      ? await dishRepository.getOne({ name, menuId: menuId || req.menuId })
       : null;
 
     return !dishExists

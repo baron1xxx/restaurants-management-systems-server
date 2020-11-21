@@ -28,5 +28,8 @@ export default [
   /^\/menus\/((?:[^/]+?))$/i, // /menus/:id
   /^\/menus\/byRestaurant\/((?:[^/]+?))$/i, // '/menus/byRestaurant/:restaurantId'
   // Table router
-  /^\/tables\/byRestaurant\/((?:[^/]+?))$/i
+  /^\/tables\/byRestaurant\/((?:[^/]+?))$/i,
+  // Dish router
+  /^\/dishes\/((?:[^/]+?))$/i,
+  /^\/dishes\/byMenu\/((?:[^/]+?))$/i
 ];

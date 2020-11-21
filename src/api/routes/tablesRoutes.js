@@ -19,8 +19,8 @@ router
   .post('/',
     jwtAccessTokenMiddleware,
     roleAuthorizationMiddleware([roles.ADMIN, roles.OWNER]),
-    onlyRestaurantOwnerOrAdminMiddleware,
     createTableValidMiddleware,
+    onlyRestaurantOwnerOrAdminMiddleware,
     tableExistsByNumberByRestaurantIdMiddleware,
     tableController.create)
   .route('/:tableId')

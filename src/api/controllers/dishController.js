@@ -19,9 +19,9 @@ export const create = async (req, res, next) => {
 
 export const getById = async (req, res, next) => {
   try {
-    const { params: { id } } = req;
+    const { params: { dishId } } = req;
 
-    const dish = await dishService.getById(id);
+    const dish = await dishService.getById(dishId);
 
     res.status(200)
       .json({
@@ -54,11 +54,10 @@ export const updateDish = async (req, res, next) => {
     const {
       body,
       file,
-      user,
-      params: { id }
+      params: { dishId }
     } = req;
 
-    const dishUpdated = await dishService.update(id, { ...body, file, user });
+    const dishUpdated = await dishService.update(dishId, { ...body, file });
 
     res.status(200)
       .json({
@@ -72,9 +71,9 @@ export const updateDish = async (req, res, next) => {
 
 export const removeDish = async (req, res, next) => {
   try {
-    const { params: { id }, user } = req;
+    const { params: { dishId } } = req;
 
-    const dishDeleted = await dishService.update(id, { user, isDeleted: true });
+    const dishDeleted = await dishService.update(dishId, { isDeleted: true });
 
     res.status(200)
       .json({

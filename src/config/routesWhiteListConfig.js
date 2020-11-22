@@ -31,5 +31,7 @@ export default [
   /^\/tables\/byRestaurant\/((?:[^/]+?))$/i,
   // Dish router
   /^\/dishes\/((?:[^/]+?))$/i,
-  /^\/dishes\/byMenu\/((?:[^/]+?))$/i
+  /^\/dishes\/byMenu\/((?:[^/]+?))$/i,
+  // Comment router
+  /^\/comments\/byRestaurant\/((?:[^/]+?))$/i
 ];

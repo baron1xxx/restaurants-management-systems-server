@@ -24,6 +24,10 @@ const Menu = orm.import('./menu');
 const Dish = orm.import('./dish');
 // Table model
 const Table = orm.import('./table');
+// Comment model
+const Comment = orm.import('./comment');
+// Comment model
+const Rating = orm.import('./rating');
 associate({
   User,
   Image,
@@ -40,7 +44,9 @@ associate({
   Opening,
   Menu,
   Dish,
-  Table
+  Table,
+  Comment,
+  Rating
 });
 
 export {
@@ -59,5 +65,7 @@ export {
   Opening as OpeningModel,
   Menu as MenuModel,
   Dish as DishModel,
-  Table as TableModel
+  Table as TableModel,
+  Comment as CommentModel,
+  Rating as RatingModel
 };

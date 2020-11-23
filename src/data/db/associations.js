@@ -16,12 +16,15 @@ export default models => {
     Opening,
     Menu,
     Dish,
-    Table
+    Table,
+    Rating,
+    Comment
   } = models;
 
   User.hasMany(AuthToken);
   User.hasOne(Credential);
   User.hasMany(Restaurant);
+  User.hasMany(Comment);
   User.belongsTo(Role);
   User.belongsTo(Image);
 
@@ -59,6 +62,8 @@ export default models => {
   Restaurant.hasMany(Opening);
   Restaurant.hasMany(Menu);
   Restaurant.hasMany(Table);
+  Restaurant.hasMany(Rating);
+  Restaurant.hasMany(Comment);
 
   Geolocation.hasOne(Restaurant);
 
@@ -72,4 +77,10 @@ export default models => {
   Dish.belongsTo(Image);
 
   Table.belongsTo(Restaurant);
+
+  Rating.belongsTo(Restaurant);
+
+  Comment.belongsTo(Rating);
+  Comment.belongsTo(Restaurant);
+  Comment.belongsTo(User);
 };

@@ -5,9 +5,6 @@ import { BEAD_REQUEST } from '../../../constants/responseStatusCodes';
 // eslint-disable-next-line consistent-return
 export default (req, res, next) => {
   try {
-    // eslint-disable-next-line no-unused-vars
-    const { body: { name, restaurantId } } = req;
-
     const { error } = menuCreateValidator.validate(req.body);
     if (error) {
       return next(

@@ -1,6 +1,6 @@
 import * as tableService from '../services/tableService';
 import { ErrorHandler } from '../../helpers/error/ErrorHandler';
-import { UNAUTHORIZED } from '../../constants/responseStatusCodes';
+import { FORBIDDEN } from '../../constants/responseStatusCodes';
 import { authErrorMessages } from '../../constants/customErrorMessage/authErrorMessage';
 import { roles } from '../../constants/roles';
 
@@ -14,8 +14,8 @@ export default async (req, res, next) => {
     return table.restaurant.userId === user.id || user.role.role === roles.ADMIN
       ? next()
       : next(new ErrorHandler(
-        UNAUTHORIZED,
-        authErrorMessages.UNAUTHORIZED,
+        FORBIDDEN,
+        authErrorMessages.FORBIDDEN,
         'Only OWNER or ADMIN middleware'
       ));
   } catch (e) {

@@ -4,6 +4,7 @@ import createCommentValidMiddleware from '../middlewares/commentMiddleware/creat
 import updateCommentValidMiddleware from '../middlewares/commentMiddleware/updateCommentValidMiddleware';
 import jwtAccessTokenMiddleware from '../middlewares/authMiddlewares/jwtAccessTokenMiddleware';
 import roleAuthorizationMiddleware from '../middlewares/authMiddlewares/roleAuthorizationMiddleware';
+import onlyCommentOwnerOrAdminMiddleware from '../middlewares/commentMiddleware/onlyCommentOwnerOrAdminMiddleware';
 import { roles } from '../../constants/roles';
 import paginationValidateMiddleware from '../middlewares/paginationValidateMiddleware';
 
@@ -26,16 +27,17 @@ router
   .all(
     jwtAccessTokenMiddleware,
     roleAuthorizationMiddleware(roles.CUSTOMER, roles.ADMIN)
-    // onlyCommentOwnerOrAdmin
   )
   .get(
     commentController.getCommentBytId
   )
   .put(
+    onlyCommentOwnerOrAdminMiddleware,
     updateCommentValidMiddleware,
     commentController.updateComment
   )
   .delete(
+    onlyCommentOwnerOrAdminMiddleware,
     commentController.removeComment
   );
 export default router;

@@ -1,4 +1,4 @@
-const baseServerURL = 'http://localhost:3001';
+const baseServerURL = 'http://localhost:4200';
 
 export const activateAccountTemplate = token => (
   `<p style="
@@ -12,7 +12,7 @@ export const activateAccountTemplate = token => (
                       border-radius: 4px;">
       <a 
       style="color: white" 
-      href=${baseServerURL}/api/auth/activate/${token}>Follow this link to activate your account</a>
+      href=${baseServerURL}/auth/activate/${token}>Follow this link to activate your account</a>
    </p>`);
 
 export const forgotPasswordTemplate = token => (

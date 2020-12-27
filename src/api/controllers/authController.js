@@ -4,12 +4,11 @@ import { authSuccessMessage } from '../../constants/customSuccessMessage/authSuc
 
 export const register = async (req, res, next) => {
   try {
-    const user = await authService.register(req.user);
+    await authService.register(req.user);
     res.status(200)
       .json({
         error: false,
-        data: user,
-        message: authSuccessMessage.REGISTRATION_SUCCESSFULLY
+        data: authSuccessMessage.REGISTRATION_SUCCESSFULLY
       });
   } catch (e) {
     next({ status: e.status, message: e.message, controller: e.controller });
@@ -25,8 +24,7 @@ export const login = async (req, res, next) => {
         data: {
           accessToken,
           refreshToken
-        },
-        message: null
+        }
       });
   } catch (e) {
     next({ status: e.status, message: e.message, controller: e.controller });
@@ -52,12 +50,11 @@ export const google = async (req, res, next) => {
 export const activate = async (req, res, next) => {
   try {
     const { user } = req;
-    const message = await authService.activate(user);
+
     res.status(200)
       .json({
         error: false,
-        data: null,
-        message
+        data: await authService.activate(user)
       });
   } catch (e) {
     next({ status: e.status, message: e.message, controller: e.controller });
@@ -67,12 +64,10 @@ export const activate = async (req, res, next) => {
 export const refreshActivate = async (req, res, next) => {
   try {
     const { body: { email } } = req;
-    const message = await authService.refreshActivate(email);
     res.status(200)
       .json({
         error: false,
-        data: null,
-        message
+        data: await authService.refreshActivate(email)
       });
   } catch (e) {
     next({ status: e.status, message: e.message, controller: e.controller });
